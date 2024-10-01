@@ -1,0 +1,42 @@
+.slick-dots.slick-thumb {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  position: absolute;
+  bottom: 22%;
+  transform: rotate(90deg);
+  width: auto;
+  left: -172px;
+  height: 100%;
+
+}
+
+.slick-dots.slick-thumb li {
+  width: 16px;
+  height: 16px;
+  margin: 0 3px;
+  border-radius: 999px;
+  transition: all 0.5s ease-in-out;
+  will-change: width;
+  background-color: #fff;
+  padding: 3px;
+
+}
+
+.slick-dots.slick-thumb .slick-active .dot  {
+  background-color: #E07026;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.slick-next:before{
+  content: none !important;
+}
+.slick-prev:before{
+  content: none !important;
+}
+
+.slick-prev, .slick-next{
+  top:11% !important;
+}

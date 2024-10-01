@@ -1,0 +1,32 @@
+export const shadows = [
+  'none',
+  '0px 3px 12px -2px rgba(0,0,0,0.1)',
+  '0px 3px 1px -2px',
+  '0px 3px 3px -2px',
+  '0px 2px 4px -1px',
+  '0px 3px 5px -1px',
+  '0px 3px 5px -1px',
+  '0px 4px 5px -2px',
+  '0px 5px 5px -3px',
+  '0px 5px 6px -3px',
+  '0px 6px 6px -3px',
+  '0px 6px 7px -4px',
+  '0px 7px 8px -4px',
+  '0px 7px 8px -4px',
+  '0px 7px 9px -4px',
+  '0px 8px 9px -5px',
+  '0px 8px 10px -5px',
+  '0px 8px 11px -5px',
+  '0px 9px 11px -5px',
+  '0px 9px 11px -5px',
+  '0px 9px 12px -6px',
+  '0px 10px 13px -6px',
+  '0px 10px 13px -6px',
+  '0px 10px 14px -6px',
+  '0px 11px 14px -7px',
+  '0px 11px 15px -7px',
+  '0px 11px 15px -7px',
+];
+
+
+
