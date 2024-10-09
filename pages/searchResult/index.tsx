@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import BackgroundImage from "@/components/ui/BackgroundImage";
 import bgSearch from "@/assets/images/search.jpg";
 import FilterSearch from "@/pages/searchResult/_components/Filter";
-import SearchItem from "@/components/products/ProductDisplay";
+// import SearchItem from "@/components/products/ProductDisplay";
 
 interface Props {}
 const Index: NextPage<Props> = () => {
@@ -76,7 +76,7 @@ const Index: NextPage<Props> = () => {
                 </FormControl>
               </Stack>
             </Stack>
-              <SearchItem  />
+              {/* <SearchItem  /> */}
           </Grid>
         </Grid>
       </Container>
