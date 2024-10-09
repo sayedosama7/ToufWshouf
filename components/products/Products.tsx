@@ -1,4 +1,9 @@
-import { Card, CardContent, CardMedia, Grid, Link, Typography } from '@mui/material';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/system';
 import { useRouter } from 'next/router';
 import { FunctionComponent } from 'react';
@@ -12,10 +17,11 @@ import type { Product } from '@/data/products';
 const Products: FunctionComponent<Product> = ({
     code,
     programname,
-    rating,
+    rate_review,
     startprice,
     img_path,
     offerPrice,
+    programyear
 }) => {
     const { t } = useTranslation();
     const router = useRouter();
@@ -38,7 +44,7 @@ const Products: FunctionComponent<Product> = ({
                     }}
                 >
                     <Link
-                        onClick={() => router.push(`productDetails/${code}`)}
+                        onClick={() => router.push(`/productDetails/${code}/${programyear}`)} // Assuming 2024 as the programyear
                         sx={{
                             position: 'absolute',
                             top: 0,
@@ -51,6 +57,7 @@ const Products: FunctionComponent<Product> = ({
                     >
                         {' '}
                     </Link>
+
                     <Stack
                         direction="row"
                         justifyContent="space-between"
@@ -71,7 +78,7 @@ const Products: FunctionComponent<Product> = ({
                         {t(programname)}
                     </Typography>
 
-                    <ProductRating rating={rating} readOnly />
+                    <ProductRating rating={rate_review} readOnly />
                 </CardContent>
             </Card>
         </Grid>

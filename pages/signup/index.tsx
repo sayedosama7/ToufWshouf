@@ -1,29 +1,29 @@
 import React from 'react';
-import {
-    Box,
-    Grid,
-    Paper,
-    Container,
-    Typography,
-    TextField,
-    Stack,
-    FormControl,
-    InputAdornment,
-    IconButton,
-    OutlinedInput,
-    Button,
-    Autocomplete,
-    FormHelperText,
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import FormControl from '@mui/material/FormControl';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Button from '@mui/material/Button';
+import Autocomplete from '@mui/material/Autocomplete';
+import FormHelperText from '@mui/material/FormHelperText';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useTranslation } from 'react-i18next';
 import AuthLayout from '@/components/AuthLayout';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Link from 'next/link';
 import { countries } from '@/constants/countries';
 import { useAddUserMutation } from '@/store/Register/RegisterApi';
 import { toast, ToastContainer } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 interface State {
     p_Mail: string;
@@ -49,7 +49,7 @@ interface Props {}
 
 const Index: NextPage<Props> = () => {
     const { t } = useTranslation();
-
+    const router = useRouter();
     const [values, setValues] = React.useState<State>({
         p_Mail: '',
         CNAME: '',
@@ -99,8 +99,6 @@ const Index: NextPage<Props> = () => {
             RememberMe: values.RememberMe,
         };
 
-        console.log('Data being sent:', formattedData);
-
         addUser(formattedData)
             .unwrap()
             .then(response => {
@@ -111,9 +109,16 @@ const Index: NextPage<Props> = () => {
                         errors: { ...prev.errors, p_Mail: response.OTP },
                     }));
                     toast.error(response.OTP);
+                } else if (response?.OTP === 'This Phone already Exist') {
+                    setValues(prev => ({
+                        ...prev,
+                        errors: { ...prev.errors, TEL: response.OTP },
+                    }));
+                    toast.error(response.OTP);
                 } else if (response?.OTP === 'Please Review Your Mail') {
                     console.log('User added successfully:', response);
-
+                    localStorage.setItem('email', values.p_Mail);
+                    localStorage.setItem('password', values.C_PASS);
                     setValues({
                         p_Mail: '',
                         CNAME: '',
@@ -130,13 +135,22 @@ const Index: NextPage<Props> = () => {
                     toast.success(
                         'Registration successful. Please check your email to verify your account.'
                     );
+                    router.push('/VerifyEmail');
                 } else {
+                    console.warn('Unexpected response:', response);
                     toast.error('Unexpected response from the server.');
                 }
             })
+
             .catch(error => {
                 console.error('Error setting up request:', error.message);
-                toast.error('Error in request: ' + error.message);
+                if (error.response) {
+                    toast.error(`Server error: ${error.response.data.message}`);
+                } else if (error.request) {
+                    toast.error('Network error: No response received from the server');
+                } else {
+                    toast.error('Request error: ' + error.message);
+                }
             });
     };
 
@@ -292,9 +306,9 @@ const Index: NextPage<Props> = () => {
                                                     edge="end"
                                                 >
                                                     {values.showPassword ? (
-                                                        <VisibilityOff />
+                                                        <VisibilityOffIcon />
                                                     ) : (
-                                                        <Visibility />
+                                                        <VisibilityIcon />
                                                     )}
                                                 </IconButton>
                                             </InputAdornment>

@@ -10,5 +10,13 @@
   "Outings": "العطل",
   "Hotels": "الفنادق",
   "Transportation": "مواصلات",
-  "Flights": "رحلات جوية"
+  "Flights": "رحلات جوية",
+  "OTP is required": "OTP مطلوب",
+  "Verification failed!": "فشل التحقق. يرجى التحقق من OTP.",
+  "Email verified successfully!": "تم التحقق من البريد الإلكتروني بنجاح!",
+  "Verify Your Email": "تحقق من بريدك الإلكتروني",
+  "Verify Email": "تحقق من البريد الإلكتروني",
+  "Verifying...": "جارٍ التحقق...",
+  "Enter OTP": "أدخل OTP",
+  "Verification failed. Please check the OTP.": " فشل التحقق. يرجى التحقق من OTP."
 }

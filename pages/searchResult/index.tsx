@@ -1,24 +1,22 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Container,
-  FormControl,
-  Grid,
-  Stack,
-  Typography,
-  InputAdornment,
-  Select,
-  MenuItem,
-  OutlinedInput,
-  SelectChangeEvent,
-} from "@mui/material";
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import InputAdornment from '@mui/material/InputAdornment';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import SelectChangeEvent from '@mui/material/SelectChangeEvent';
 import { NextPage } from "next";
 import Head from "next/head";
 import { useTranslation } from "react-i18next";
 import BackgroundImage from "@/components/ui/BackgroundImage";
 import bgSearch from "@/assets/images/search.jpg";
 import FilterSearch from "@/pages/searchResult/_components/Filter";
-import { StarHalfRounded } from "@mui/icons-material";
+import StarHalfRoundedIcon from '@mui/icons-material/StarHalfRounded';
 import SearchItem from "@/components/products/ProductDisplay";
 
 interface Props {}
@@ -83,7 +81,7 @@ const Index: NextPage<Props> = () => {
                 </FormControl>
               </Stack>
             </Stack>
-              <SearchItem />
+              <SearchItem  />
           </Grid>
         </Grid>
       </Container>
