@@ -19,6 +19,7 @@ const BestProducts: FunctionComponent<Props> = ({ title }) => {
     const { t } = useTranslation();
     const { data, error, isLoading } = useGetProductQuery();
     const Router = useRouter();
+
     if (isLoading) {
         return <Typography>Loading...</Typography>;
     }
@@ -26,10 +27,12 @@ const BestProducts: FunctionComponent<Props> = ({ title }) => {
     if (error || !data) {
         return <Typography>Error loading products</Typography>;
     }
+
     const handleMoreDetails = () => {
         Router.push('/ProductDisplay');
     };
 
+    // Access products from the data object
     const products = data.items;
 
     return (
@@ -43,14 +46,16 @@ const BestProducts: FunctionComponent<Props> = ({ title }) => {
                 alignItems="center"
                 sx={{ mb: 2 }}
             >
-                {products.slice(6, 9).map(product => (
+                {products.slice(1, 4).map(product => (
                     <Products
                         key={product.code}
                         code={product.code}
+                        programyear={product.programyear}
                         programname={product.programname}
-                        rating={product.rating}
+                        rating={product.rate_review}
                         startprice={product.startprice}
                         img_path={product.img_path}
+                        rate_review={product.rate_review}
                     />
                 ))}
             </Stack>

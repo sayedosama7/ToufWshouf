@@ -1,16 +1,16 @@
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
+function useIsAuthPage(): boolean {
+    const router = useRouter();
+    const [isAuthPage, setIsAuthPage] = useState<boolean>(false);
 
-import {  useState } from 'react'
+    useEffect(() => {
+        const authPages = ['/login', '/signup'];
+        setIsAuthPage(authPages.includes(router.pathname));
+    }, [router.pathname]);
 
-interface ReturnType {
+    return isAuthPage;
 }
 
-function IsAuthPages(initialValue?: number): ReturnType {
-
-    const AuthPagesPath = useRouter().pathname
-
-  return  (AuthPagesPath === '/login' || AuthPagesPath === '/signup' ) ? true : false
-}
-
-export default IsAuthPages
+export default useIsAuthPage;

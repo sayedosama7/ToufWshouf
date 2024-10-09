@@ -1,16 +1,17 @@
 import React, { FunctionComponent } from 'react';
-import Topbar from './Topbar';
 import Navbar from './Navbar';
-import IsAuthPages from '@/hooks/auth/useIsAuthPages';
+import Topbar from './Topbar';
+import useIsAuthPage from '@/hooks/auth/useIsAuthPages';
 
-interface Props {}
-const index: FunctionComponent<Props> = () => {
-  return (
-    <>
-      <Topbar />
-      {IsAuthPages() ? '' : <Navbar />}
-    </>
-  );
+const Index: FunctionComponent = () => {
+    const isAuthPage = useIsAuthPage(); 
+
+    return (
+        <>
+            <Topbar />
+            {!isAuthPage && <Navbar />}
+        </>
+    );
 };
 
-export default index;
+export default Index;

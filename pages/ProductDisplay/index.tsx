@@ -1,5 +1,11 @@
 import { useGetProductQuery } from '@/store/Products/GetProductsApi';
-import { Grid, Stack, Typography, CardMedia, CardContent, Link, Card } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import CardMedia from '@mui/material/CardMedia';
+import CardContent from '@mui/material/CardContent';
+import Link from '@mui/material/Link';
+import Card from '@mui/material/Card';
 import React, { FunctionComponent } from 'react';
 import { Product } from '@/data/products';
 import WishlistButton from '@/components/products/WishlistButton';
@@ -51,7 +57,7 @@ const BestProducts: FunctionComponent<Props> = () => {
                                 >
                                     <Link
                                         onClick={() =>
-                                            router.push(`productDetails/${product.code}`)
+                                            router.push(`detailsesProgram/${product.code}`)
                                         }
                                         sx={{
                                             position: 'absolute',
@@ -88,7 +94,7 @@ const BestProducts: FunctionComponent<Props> = () => {
                                         {product.programname}
                                     </Typography>
 
-                                    <ProductRating rating={product.rating} readOnly />
+                                    <ProductRating rating={product.rate_review} readOnly />
                                 </CardContent>
                             </Card>
                         </Grid>

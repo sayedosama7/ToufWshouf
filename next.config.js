@@ -9,9 +9,11 @@ const nextConfig = {
         destination: '/home',
         permanent: true,
       },
-    ]
+    ];
   },
-
+  images: {
+    domains: ['app.misrtravelco.net'],
+  },
 }
 
-module.exports = nextConfig
+module.exports = nextConfig;

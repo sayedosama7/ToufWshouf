@@ -1,4 +1,9 @@
-import { Box, Grid, Typography, Button ,Container, Stack } from '@mui/material';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
 import React, { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
@@ -37,6 +42,7 @@ const BannerAds: FunctionComponent<Props> = (props) => {
         objectFit="cover"
         objectPosition="center"
         quality={100}
+        priority 
       />
       <Stack
       direction="column"
