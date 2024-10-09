@@ -1,18 +1,18 @@
-import { StarHalfRounded, WidgetsRounded } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  FormControl,
-  MenuItem,
-  Paper,
-  Select,
-  Stack,
-  Typography,
-  SelectChangeEvent,
-  OutlinedInput,
-  InputAdornment,
-  TextField,
-} from "@mui/material";
+import StarHalfRoundedIcon from '@mui/icons-material/StarHalfRounded';
+import WidgetsRoundedIcon from '@mui/icons-material/WidgetsRounded';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import MenuItem from '@mui/material/MenuItem';
+import Paper from '@mui/material/Paper';
+import Select from '@mui/material/Select';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
+import { SelectChangeEvent } from '@mui/material/Select';
+
 import React, { FunctionComponent, useState } from "react";
 import { useTranslation } from "react-i18next";
 interface Props {}
@@ -58,7 +58,7 @@ const FilterSearch: FunctionComponent<Props> = () => {
             }}
             startAdornment={
               <InputAdornment position="start" sx={{ color: "main.lightGray" }}>
-                <StarHalfRounded />
+                <StarHalfRoundedIcon />
               </InputAdornment>
             }
           >
@@ -88,7 +88,7 @@ const FilterSearch: FunctionComponent<Props> = () => {
             }}
             startAdornment={
               <InputAdornment position="start" sx={{ color: "main.lightGray" }}>
-                <WidgetsRounded />
+                <WidgetsRoundedIcon />
               </InputAdornment>
             }
           >

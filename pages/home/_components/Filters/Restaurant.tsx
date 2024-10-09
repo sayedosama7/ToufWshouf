@@ -1,19 +1,15 @@
-import {
-  Button,
-  FormControl,
-  Grid,
-  InputAdornment,
-  MenuItem,
-  OutlinedInput,
-} from '@mui/material';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
+import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import React, { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Place,
-  WidgetsRounded,
-  InsertInvitationRounded,
-  People
-} from '@mui/icons-material';
+import PlaceIcon from '@mui/icons-material/Place';
+import WidgetsRoundedIcon from '@mui/icons-material/WidgetsRounded';
+import InsertInvitationRoundedIcon from '@mui/icons-material/InsertInvitationRounded';
+import PeopleIcon from '@mui/icons-material/People';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 interface Props {}
@@ -56,7 +52,7 @@ const Restaurant: FunctionComponent<Props> = () => {
             placeholder={t('City')}
             startAdornment={
               <InputAdornment position="start" sx={{ color: 'main.lightGray' }}>
-                <Place />
+                <PlaceIcon />
               </InputAdornment>
             }
           />
@@ -81,7 +77,7 @@ const Restaurant: FunctionComponent<Props> = () => {
             }}
             startAdornment={
               <InputAdornment position="start" sx={{ color: 'main.lightGray' }}>
-                <WidgetsRounded />
+                <WidgetsRoundedIcon />
               </InputAdornment>
             }
           >
@@ -110,7 +106,7 @@ const Restaurant: FunctionComponent<Props> = () => {
             placeholder={t('Pick a date')}
             startAdornment={
               <InputAdornment position="start" sx={{ color: 'main.lightGray' }}>
-                <InsertInvitationRounded />
+                <InsertInvitationRoundedIcon />
               </InputAdornment>
             }
           />
@@ -135,7 +131,7 @@ const Restaurant: FunctionComponent<Props> = () => {
             }}
             startAdornment={
               <InputAdornment position="start" sx={{ color: 'main.lightGray' }}>
-                <People />
+                <PeopleIcon />
               </InputAdornment>
             }
           >
