@@ -1,19 +1,18 @@
-import { InsertInvitationRounded, Update } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  Grid,
-  InputAdornment,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  Typography,
-} from '@mui/material';
+import InsertInvitationRoundedIcon from '@mui/icons-material/InsertInvitationRounded';
+import UpdateIcon from '@mui/icons-material/Update';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
+import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+
 import Link from 'next/link';
 import React, { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -54,7 +53,7 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
                   position="start"
                   sx={{ color: 'main.lightGray' }}
                 >
-                  <InsertInvitationRounded />
+                  <InsertInvitationRoundedIcon />
                 </InputAdornment>
               }
             />
@@ -83,7 +82,7 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
                   position="start"
                   sx={{ color: 'main.lightGray' }}
                 >
-                  <Update />
+                  <UpdateIcon />
                 </InputAdornment>
               }
             >

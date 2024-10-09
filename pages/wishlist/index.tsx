@@ -1,17 +1,15 @@
 import React, { useState } from "react";
-import {
-  Container,
-  Grid,
-  Stack,
-  Typography,
-  Button
-} from "@mui/material";
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import { NextPage } from "next";
 import Head from "next/head";
 import { useTranslation } from "react-i18next";
 import BackgroundImage from "@/components/ui/BackgroundImage";
 import bgSearch from "@/assets/images/search.jpg";
-import SearchItem from "@/components/products/ProductDisplay";
+// import SearchItem from "@/components/products/ProductDisplay";
 
 interface Props {}
 const Index: NextPage<Props> = () => {
@@ -37,8 +35,8 @@ const Index: NextPage<Props> = () => {
       <Container maxWidth="lg">
         <Grid container sx={{ mt: 3 }}>
           <Grid item xs={12}>
-            <SearchItem myBooking  />
-            <SearchItem myBooking />
+            {/* <SearchItem myBooking  />
+            <SearchItem myBooking /> */}
           </Grid>
         </Grid>
         <Grid container spacing={4} direction="column">
