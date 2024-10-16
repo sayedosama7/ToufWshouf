@@ -141,11 +141,11 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
     }
 
     const handlePay = async () => {
-        const progGrpNo = groupPriceData.items[0].prog_grp_no; 
-    
+        const progGrpNo = groupPriceData.items[0].prog_grp_no;
+
         setIsLoading(true);
         setErrorMessage('');
-    
+
         try {
             // إرسال بيانات الحجز
             const reservationResponse = await addReservation({
@@ -157,9 +157,9 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
                 PAX_TYPE: groupPriceData.items[0].pax_type,
                 PAX_COUNT: selectedPaxAval,
             }).unwrap();
-    
+
             console.log('Reservation added successfully:', reservationResponse);
-    
+
             // بعد نجاح الحجز، إرسال البيانات الإضافية
             const extraServiceResponse = await addExtra({
                 CUST_REF: customerData.CustCode,
@@ -168,11 +168,11 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
                 SRV_TYPE: reservationResponse.p_category,
                 PAX_TYPE: groupPriceData.items[0].pax_type,
                 PAX_COUNT: selectedPaxAval,
-                ITEM_REF: extra.item_ref, 
+                ITEM_REF: extra.item_ref,
             }).unwrap();
-    
+
             console.log('Extra services added successfully:', extraServiceResponse);
-    
+
             handleNext();
         } catch (error) {
             if (error instanceof Error) {
@@ -189,7 +189,6 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
             setIsLoading(false);
         }
     };
-    
 
     // const handlePay = async () => {
     //     try {
@@ -206,13 +205,12 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
     //         body.append('PAX_TYPE', 'CH1');
     //         body.append('PAX_COUNT', '2');
     //         body.append('ITEM_REF', 'TOU-102024E1148CH1');
-            
 
     //         // تمرير code و year كـ query parameters
     //         const response = await axios.post(url, body, {
     //             headers: { 'Content-Type': 'multipart/form-data' },
     //         });
-            
+
     //         console.log('Reservation added successfully:', response.data);
     //     } catch (error) {
     //         if (axios.isAxiosError(error)) {
