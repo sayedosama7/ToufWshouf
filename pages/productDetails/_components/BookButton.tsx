@@ -1,38 +1,47 @@
-import { FacebookOutlined, Twitter } from "@mui/icons-material";
-import {Typography , Button, IconButton ,Stack} from "@mui/material"
-import React ,{FunctionComponent} from 'react'      
-import { useTranslation } from 'react-i18next';      
-import { useRouter } from 'next/router';      
+import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
+import React, { FunctionComponent } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useRouter } from 'next/router';
+
 interface Props {
-    id: string | number | undefined;
+    code: string | number | undefined;
+    programyear: string | number | undefined;
 }
-const BookButton :FunctionComponent<Props> = ({id}) => {
 
-    const {t} = useTranslation()      
-    const router = useRouter()      
+const BookButton: FunctionComponent<Props> = ({ code, programyear }) => {
+    const { t } = useTranslation();
+    const router = useRouter();
+    const handleBooking = () => {
+        router.push(`/booking/${code}/${programyear}`);
+    };
 
-  return (
-    <Stack
-    direction="row"
-    justifyContent="space-between"
-    alignItems="center"
-    sx={{ mt: 2, color: 'body.main' }}
-  >
-    <Button variant="contained" size="large"  onClick={() =>router.push(`/booking/${id}`)} >
-      Book Now
-    </Button>
+    return (
+        <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ mt: 2, color: 'body.main' }}
+        >
+            <Button variant="contained" size="large" onClick={handleBooking}>
+                {t('Book Now')}
+            </Button>
 
-    <Stack direction="row" alignItems="center" spacing={2}>
-      <Typography variant="body1">Share via</Typography>
-      <IconButton>
-        <FacebookOutlined sx={{ color: 'body.main' }} />
-      </IconButton>
-      <IconButton>
-        <Twitter sx={{ color: 'body.main' }} />
-      </IconButton>
-    </Stack>
-  </Stack>
-)
+            <Stack direction="row" alignItems="center" spacing={2}>
+                <Typography variant="body1">{t('Share via')}</Typography>
+                <IconButton>
+                    <FacebookOutlinedIcon sx={{ color: 'body.main' }} />
+                </IconButton>
+                <IconButton>
+                    <TwitterIcon sx={{ color: 'body.main' }} />
+                </IconButton>
+            </Stack>
+        </Stack>
+    );
 };
 
-export default BookButton
+export default BookButton;

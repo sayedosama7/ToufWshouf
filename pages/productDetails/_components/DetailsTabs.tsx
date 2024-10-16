@@ -1,7 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
-import TwitterIcon from '@mui/icons-material/Twitter';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Tabs from '@mui/material/Tabs';
@@ -11,19 +9,17 @@ import Divider from '@mui/material/Divider';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Avatar from '@mui/material/Avatar';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useGetImgQuery } from '@/store/Products/FetchImagesApi';
 import BookButton from './BookButton';
-import ProductRating from '@/components/products/ProductRating';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useGetReviewQuery } from '@/store/Products/FetchReviewApi';
 import { useGetSupplementQuery } from '@/store/Products/FetchSupplementApi';
+import UserRating from '@/components/products/UserRating';
+import ReviewForm from '../ReviewForm';
 interface Props {
     id: string | number | undefined;
     productData: {
@@ -47,9 +43,13 @@ interface Supplement {
 const DetailsTabs: FunctionComponent<Props> = ({ id, productData }) => {
     const { t } = useTranslation();
     const router = useRouter();
-    const { code, programyear } = router.query;
+    // const { code, programyear } = router.query;
     const [value, setValue] = React.useState(0);
 
+    const code = router.query.code ? parseInt(router.query.code as string, 10) : undefined;
+    const programyear = router.query.programyear
+        ? parseInt(router.query.programyear as string, 10)
+        : undefined;
     // fetch images
     const { data, error, isLoading } = useGetImgQuery({ code, programyear });
     const tripImages = data?.items || [];
@@ -133,7 +133,7 @@ const DetailsTabs: FunctionComponent<Props> = ({ id, productData }) => {
                 <Typography variant="body2">
                     End Date :{t(productData?.endDate || 'No overview available')}
                 </Typography>
-                <BookButton id={id} />
+                <BookButton code={code} programyear={programyear} />
             </TabPanel>
 
             {/* supplement */}
@@ -163,39 +163,42 @@ const DetailsTabs: FunctionComponent<Props> = ({ id, productData }) => {
                     <TaskAltIcon />
                     <Typography variant="subtitle1">{t("All prices don't include VAT")}</Typography>
                 </Stack>
-                <BookButton id={id} />
+                {/* <BookButton id={id} /> */}
             </TabPanel>
 
             {/* tripImages */}
             <TabPanel value={value} index={2}>
-    {isLoading ? (
-        <CircularProgress />
-    ) : error ? (
-        <Typography variant="body2">{t('Error loading images')}</Typography>
-    ) : tripImages.length > 0 ? (
-        <ImageList sx={{ width: '100%', height: 450 }} cols={3} rowHeight={164}>
-            {tripImages.map((item: any, index: number) => (
-                <ImageListItem key={index} sx={{ mx: 2 }}>
-                    <Image
-                        src={`http://${item.image}`}
-                        alt={item.img_name}
-                        layout="fill"
-                        quality={100}
-                    />
-                </ImageListItem>
-            ))}
-        </ImageList>
-    ) : (
-        <Typography variant="body2">{t('No images available')}</Typography>
-    )}
-    <BookButton id={id} />
-</TabPanel>
-
+                {isLoading ? (
+                    <CircularProgress />
+                ) : error ? (
+                    <Typography variant="body2">{t('Error loading images')}</Typography>
+                ) : tripImages.length > 0 ? (
+                    <ImageList sx={{ width: '100%', height: 450 }} cols={3} rowHeight={164}>
+                        {tripImages.map((item: any, index: number) => (
+                            <ImageListItem key={index} sx={{ mx: 2 }}>
+                                <Image
+                                    src={`http://${item.image}`}
+                                    alt={item.img_name}
+                                    layout="fill"
+                                    quality={100}
+                                />
+                            </ImageListItem>
+                        ))}
+                    </ImageList>
+                ) : (
+                    <Typography variant="body2">{t('No images available')}</Typography>
+                )}
+                {/* <BookButton id={id} /> */}
+            </TabPanel>
 
             {/* reviews */}
             <TabPanel value={value} index={3}>
                 <ReviewSection reviews={reviews} />
-                <ReviewForm />
+                {code && programyear ? (
+                    <ReviewForm code={code} programyear={programyear} />
+                ) : (
+                    <Typography variant="body2">Unable to load review form</Typography>
+                )}
             </TabPanel>
         </div>
     );
@@ -223,47 +226,13 @@ const ReviewSection: FunctionComponent<{
                         <Typography variant="body2">{review.review}</Typography>
                         <Divider sx={{ my: 2 }} />
                     </Box>
-                    <ProductRating readOnly rating={review.rate} />
+                    <UserRating readOnly rating={review.rate} />
                 </Stack>
             ))
         ) : (
             <Typography variant="body2">No reviews available</Typography>
         )}
     </Stack>
-);
-
-// Review Form component
-const ReviewForm = () => (
-    <Box sx={{ my: 3 }}>
-        <TextField
-            id="outlined-basic"
-            placeholder="Write your feedback here.."
-            variant="outlined"
-            fullWidth
-            multiline
-            maxRows={5}
-            minRows={4}
-        />
-        <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            sx={{ mt: 2, color: 'body.main' }}
-        >
-            <Button variant="contained" size="large">
-                Submit
-            </Button>
-            <Stack direction="row" alignItems="center" spacing={2}>
-                <Typography variant="body1">Share via</Typography>
-                <IconButton>
-                    <FacebookOutlinedIcon sx={{ color: 'body.main' }} />
-                </IconButton>
-                <IconButton>
-                    <TwitterIcon sx={{ color: 'body.main' }} />
-                </IconButton>
-            </Stack>
-        </Stack>
-    </Box>
 );
 
 interface TabPanelProps {

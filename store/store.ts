@@ -10,10 +10,18 @@ import { FetchSupplementApi } from './Products/FetchSupplementApi';
 import { FetchTourIncludingApi } from './Products/FetchTourIncludingApi';
 import { FetchPolicyApi } from './Products/FetchPolicyApi';
 import { VerifyEmailApi } from './Register/VerifyEmailApi';
+import { AddReviewApi } from './Products/AddReviewApi';
+import userSlice  from './Register/userSlice';
+import { FetchProgramGroupsApi } from './Products/FetchProgramGroupsApi';
+import { FetchGroupPriceApi } from './Products/FetchGroupPriceApi';
+import { FetchExtraApi } from './Products/FetchExtraApi';
+import { AddReservationApi } from './Reservation/AddReservationApi';
+import { AddExtraApi } from './Reservation/AddExtraApi';
 
 export const store = configureStore({
     reducer: {
         language: languageSlice,
+        user: userSlice,
         [FetchProductApi.reducerPath]: FetchProductApi.reducer,
         [RegisterApi.reducerPath]: RegisterApi.reducer,
         [LoginApi.reducerPath]: LoginApi.reducer,
@@ -24,6 +32,12 @@ export const store = configureStore({
         [FetchTourIncludingApi.reducerPath]: FetchTourIncludingApi.reducer,
         [FetchPolicyApi.reducerPath]: FetchPolicyApi.reducer,
         [VerifyEmailApi.reducerPath]: VerifyEmailApi.reducer,
+        [AddReviewApi.reducerPath]: AddReviewApi.reducer,
+        [FetchProgramGroupsApi.reducerPath]: FetchProgramGroupsApi.reducer,
+        [FetchGroupPriceApi.reducerPath]: FetchGroupPriceApi.reducer,
+        [FetchExtraApi.reducerPath]: FetchExtraApi.reducer,
+        [AddReservationApi.reducerPath]: AddReservationApi.reducer,
+        [AddExtraApi.reducerPath]: AddExtraApi.reducer,
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware()
@@ -37,6 +51,12 @@ export const store = configureStore({
             .concat(FetchTourIncludingApi.middleware)
             .concat(FetchPolicyApi.middleware)
             .concat(VerifyEmailApi.middleware)
+            .concat(AddReviewApi.middleware)
+            .concat(FetchProgramGroupsApi.middleware)
+            .concat(FetchGroupPriceApi.middleware)
+            .concat(FetchExtraApi.middleware)
+            .concat(AddReservationApi.middleware)
+            .concat(AddExtraApi.middleware)
 });
 
 export type AppDispatch = typeof store.dispatch;

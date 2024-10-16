@@ -21,14 +21,22 @@ import { useGetPolicyQuery } from '@/store/Products/FetchPolicyApi';
 interface Props {}
 
 const Index: NextPage<Props> = () => {
-    const router = useRouter();
     const { t } = useTranslation();
+    const router = useRouter();
     const { code, programyear } = router.query;
 
     // fetch details
-    const { data, error, isLoading } = useGetDetailsQuery(
-        code && programyear ? { code, programyear } : null
-    );
+    const queryParams = code && programyear ? { code, programyear } : undefined;
+    const { data, error, isLoading } = useGetDetailsQuery(queryParams);
+
+    // if (error) {
+    //     console.error('details API Error:', error);
+    // }
+
+    // if (data && data.items && data.items.length > 0) {
+    // } else {
+    //     console.error('details API not found:');
+    // }
 
     // fetch tour including
     const { data: includingData, error: includingError } = useGetIncludingQuery({
@@ -44,21 +52,24 @@ const Index: NextPage<Props> = () => {
     });
     const policy = policyData?.items || [];
 
+    if (!code || !programyear) {
+        return (
+            <Typography variant="h6" color="error">
+                {t('Error: Missing product details parameters.')}
+            </Typography>
+        );
+    }
+
     if (includingError) {
         console.error('Including API Error:', includingError);
     }
 
-    if (isLoading) {
-        return <CircularProgress />;
+    if (policyError) {
+        console.error('policy API Error:', policyError);
     }
 
-    if (error) {
-        console.error('Error:', error);
-        return (
-            <Typography variant="h6" color="error">
-                {t('Error loading product details: ')}
-            </Typography>
-        );
+    if (isLoading) {
+        return <CircularProgress />;
     }
 
     if (!data || !data.items || data.items.length === 0) {
@@ -71,6 +82,7 @@ const Index: NextPage<Props> = () => {
         <div>
             <Head>
                 <title>{productData.ProgramName} - Product Details</title>
+                <meta name="description" content="Product Details" />
             </Head>
             <Box>
                 <Container maxWidth="lg" sx={{ mt: 3 }}>

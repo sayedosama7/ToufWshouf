@@ -54,7 +54,7 @@ const VerifyEmail: NextPage<Props> = () => {
         if (!isValid) return;
         try {
             const response = await verifyEmail({
-                OTP: Number(OTP), 
+                OTP: Number(OTP),
                 p_Mail: email,
                 TEL: phone,
             }).unwrap();
@@ -94,6 +94,7 @@ const VerifyEmail: NextPage<Props> = () => {
                 <ToastContainer />
                 <Head>
                     <title>{t('Verify Email')}</title>
+                    <meta name="description" content="Verify Email Page" />
                 </Head>
                 <Paper elevation={0}>
                     <Container sx={{ py: 2 }}>
