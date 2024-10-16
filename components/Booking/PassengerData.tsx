@@ -9,6 +9,22 @@ import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import Select from '@mui/material/Select';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { SelectChangeEvent } from '@mui/material/Select';
+
+import InsertInvitationRoundedIcon from '@mui/icons-material/InsertInvitationRounded';
+import UpdateIcon from '@mui/icons-material/Update';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
+import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -231,6 +247,92 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
     //         }}
     // };
 
+  return (
+    <Box sx={{ mt: 5 }}>
+      <Grid container spacing={4}>
+        <Grid item xs={2.5}>
+          <FormControl sx={{ mt: 1, width: '100%' }} variant="outlined">
+            <OutlinedInput
+              id="date"
+              sx={{
+                backgroundColor: 'body.light',
+                color: 'main.lightGray',
+              }}
+              type="date"
+              fullWidth
+              placeholder={t('Pick a date')}
+              startAdornment={
+                <InputAdornment
+                  position="start"
+                  sx={{ color: 'main.lightGray' }}
+                >
+                  <InsertInvitationRoundedIcon />
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+        </Grid>
+        <Grid item xs={2.5}>
+          <FormControl sx={{ mt: 1, width: '100%' }} variant="outlined">
+            <Select
+              id="Trip type"
+              sx={{ backgroundColor: 'body.light' }}
+              displayEmpty
+              input={<OutlinedInput />}
+              fullWidth
+              value={personName}
+              onChange={handleChange}
+              placeholder="Trip type"
+              renderValue={(selected: any) => {
+                if (selected.length === 0) {
+                  return <Box sx={{ color: '#B7B7B7' }}>Time</Box>;
+                }
+
+                return selected.join(', ');
+              }}
+              startAdornment={
+                <InputAdornment
+                  position="start"
+                  sx={{ color: 'main.lightGray' }}
+                >
+                  <UpdateIcon />
+                </InputAdornment>
+              }
+            >
+              <MenuItem disabled value="">
+                <em>Time</em>
+              </MenuItem>
+              {names.map((name) => (
+                <MenuItem key={name} value={name}>
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
+      <AdditionalServices />
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ py: 2, mt: 3 }}
+      >
+        <Typography variant="subtitle1">{t('Total')}</Typography>
+        <Typography variant="subtitle1">{t('2200 EGP')}</Typography>
+      </Stack>
+      <Typography variant="subtitle1" sx={{ color: 'primary.main' }}>
+        {t('The total includes VAT')}
+      </Typography>
+      <Stack direction="row" alignItems="center">
+        <FormControlLabel
+          control={<Checkbox defaultChecked />}
+          label="I Accept Terms And Conditions and Cancellation policy"
+        />
+        <Typography variant="subtitle1" sx={{ color: "secondary.main", ml:"-5px"}}>
+        <Link href="/">Read Terms and conditions</Link>
+        </Typography>
+      </Stack>
     return (
         <Box sx={{ mt: 5 }}>
             {programGroupLoading || groupPriceLoading ? (

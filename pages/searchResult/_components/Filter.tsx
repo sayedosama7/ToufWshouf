@@ -5,12 +5,13 @@ import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
+import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { SelectChangeEvent } from '@mui/material/Select';
 
 import React, { FunctionComponent, useState } from "react";
 import { useTranslation } from "react-i18next";
