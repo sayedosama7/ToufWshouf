@@ -9,22 +9,6 @@ import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import Select from '@mui/material/Select';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { SelectChangeEvent } from '@mui/material/Select';
-
-import InsertInvitationRoundedIcon from '@mui/icons-material/InsertInvitationRounded';
-import UpdateIcon from '@mui/icons-material/Update';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Grid from '@mui/material/Grid';
-import InputAdornment from '@mui/material/InputAdornment';
-import MenuItem from '@mui/material/MenuItem';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -157,11 +141,11 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
     }
 
     const handlePay = async () => {
-        const progGrpNo = groupPriceData.items[0].prog_grp_no; 
-    
+        const progGrpNo = groupPriceData.items[0].prog_grp_no;
+
         setIsLoading(true);
         setErrorMessage('');
-    
+
         try {
             // إرسال بيانات الحجز
             const reservationResponse = await addReservation({
@@ -173,9 +157,9 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
                 PAX_TYPE: groupPriceData.items[0].pax_type,
                 PAX_COUNT: selectedPaxAval,
             }).unwrap();
-    
+
             console.log('Reservation added successfully:', reservationResponse);
-    
+
             // بعد نجاح الحجز، إرسال البيانات الإضافية
             const extraServiceResponse = await addExtra({
                 CUST_REF: customerData.CustCode,
@@ -184,11 +168,11 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
                 SRV_TYPE: reservationResponse.p_category,
                 PAX_TYPE: groupPriceData.items[0].pax_type,
                 PAX_COUNT: selectedPaxAval,
-                ITEM_REF: extra.item_ref, 
+                ITEM_REF: extra.item_ref,
             }).unwrap();
-    
+
             console.log('Extra services added successfully:', extraServiceResponse);
-    
+
             handleNext();
         } catch (error) {
             if (error instanceof Error) {
@@ -205,7 +189,6 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
             setIsLoading(false);
         }
     };
-    
 
     // const handlePay = async () => {
     //     try {
@@ -222,13 +205,12 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
     //         body.append('PAX_TYPE', 'CH1');
     //         body.append('PAX_COUNT', '2');
     //         body.append('ITEM_REF', 'TOU-102024E1148CH1');
-            
 
     //         // تمرير code و year كـ query parameters
     //         const response = await axios.post(url, body, {
     //             headers: { 'Content-Type': 'multipart/form-data' },
     //         });
-            
+
     //         console.log('Reservation added successfully:', response.data);
     //     } catch (error) {
     //         if (axios.isAxiosError(error)) {
@@ -247,92 +229,6 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
     //         }}
     // };
 
-  return (
-    <Box sx={{ mt: 5 }}>
-      <Grid container spacing={4}>
-        <Grid item xs={2.5}>
-          <FormControl sx={{ mt: 1, width: '100%' }} variant="outlined">
-            <OutlinedInput
-              id="date"
-              sx={{
-                backgroundColor: 'body.light',
-                color: 'main.lightGray',
-              }}
-              type="date"
-              fullWidth
-              placeholder={t('Pick a date')}
-              startAdornment={
-                <InputAdornment
-                  position="start"
-                  sx={{ color: 'main.lightGray' }}
-                >
-                  <InsertInvitationRoundedIcon />
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-        </Grid>
-        <Grid item xs={2.5}>
-          <FormControl sx={{ mt: 1, width: '100%' }} variant="outlined">
-            <Select
-              id="Trip type"
-              sx={{ backgroundColor: 'body.light' }}
-              displayEmpty
-              input={<OutlinedInput />}
-              fullWidth
-              value={personName}
-              onChange={handleChange}
-              placeholder="Trip type"
-              renderValue={(selected: any) => {
-                if (selected.length === 0) {
-                  return <Box sx={{ color: '#B7B7B7' }}>Time</Box>;
-                }
-
-                return selected.join(', ');
-              }}
-              startAdornment={
-                <InputAdornment
-                  position="start"
-                  sx={{ color: 'main.lightGray' }}
-                >
-                  <UpdateIcon />
-                </InputAdornment>
-              }
-            >
-              <MenuItem disabled value="">
-                <em>Time</em>
-              </MenuItem>
-              {names.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-      </Grid>
-      <AdditionalServices />
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{ py: 2, mt: 3 }}
-      >
-        <Typography variant="subtitle1">{t('Total')}</Typography>
-        <Typography variant="subtitle1">{t('2200 EGP')}</Typography>
-      </Stack>
-      <Typography variant="subtitle1" sx={{ color: 'primary.main' }}>
-        {t('The total includes VAT')}
-      </Typography>
-      <Stack direction="row" alignItems="center">
-        <FormControlLabel
-          control={<Checkbox defaultChecked />}
-          label="I Accept Terms And Conditions and Cancellation policy"
-        />
-        <Typography variant="subtitle1" sx={{ color: "secondary.main", ml:"-5px"}}>
-        <Link href="/">Read Terms and conditions</Link>
-        </Typography>
-      </Stack>
     return (
         <Box sx={{ mt: 5 }}>
             {programGroupLoading || groupPriceLoading ? (
