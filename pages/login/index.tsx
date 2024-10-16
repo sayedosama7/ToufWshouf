@@ -23,7 +23,8 @@ import Link from 'next/link';
 import { toast, ToastContainer } from 'react-toastify';
 import { useLazyLoginUserQuery } from '@/store/Register/LoginApi';
 import { useRouter } from 'next/router';
-
+import { useDispatch } from 'react-redux';
+import { setUser } from '@/store/Register/userSlice';
 interface State {
     Email: string;
     Pword: string;
@@ -40,6 +41,8 @@ const Login: NextPage = () => {
     const router = useRouter();
     const [submitError, setSubmitError] = React.useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const dispatch = useDispatch();
+
     const [values, setValues] = React.useState<State>({
         Email: '',
         Pword: '',
@@ -102,8 +105,6 @@ const Login: NextPage = () => {
 
         try {
             const result = await loginUser({ Email: values.Email, Pword: values.Pword });
-            console.log(result);
-
             if (result.data && result.data.Status) {
                 if (result.data.Status === 'please insert Your Regestered Email') {
                     setSubmitError('Login failed. This email is not registered.');
@@ -120,13 +121,33 @@ const Login: NextPage = () => {
                 const user = result.data.item[0];
 
                 const token = user['Token ']?.trim();
+                const CustCode = user.CustCode;
+                const NAME = user.NAME;
+                const TELEPHONE = user.TELEPHONE;
 
                 if (user.CustCode && token) {
                     localStorage.setItem('token', token);
+                    localStorage.setItem('custcode', CustCode);
+                    localStorage.setItem('NAME', NAME);
+                    localStorage.setItem('TELEPHONE', TELEPHONE);
                     localStorage.setItem('isAuthenticated', 'true');
                     setIsAuthenticated(true);
-                    toast.success('Login successful!');
-                    router.push('/home');
+
+                    dispatch(
+                        setUser({
+                            CustCode: user.CustCode,
+                            Email: user.EMAIL,
+                            Token: token,
+                        })
+                    );
+
+                    toast.success('Login successful!', {
+                        autoClose: 2000,
+                    });
+
+                    setTimeout(() => {
+                        router.push('/home');
+                    }, 2000);
                 } else {
                     setSubmitError('Invalid login response. Please try again.');
                     toast.error('Login failed. Please check your credentials.');
@@ -148,6 +169,7 @@ const Login: NextPage = () => {
                 <ToastContainer />
                 <Head>
                     <title>Login</title>
+                    <meta name="description" content="Login Page" />
                 </Head>
                 <Paper elevation={0}>
                     <Container sx={{ py: 2 }}>

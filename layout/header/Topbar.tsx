@@ -39,14 +39,20 @@ const Topbar: FunctionComponent = () => {
 
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
+    const [username, setUsername] = useState<string | null>(null);
+
     useEffect(() => {
         const token = localStorage.getItem('token');
+        const savedUsername = localStorage.getItem('NAME');
         setIsAuthenticated(!!token);
+        setUsername(savedUsername);
     }, [router.pathname]);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('NAME');
+        localStorage.removeItem('custcode');
         setIsAuthenticated(false);
         toast.success('Logout successful!');
         router.push('/login');
@@ -95,6 +101,11 @@ const Topbar: FunctionComponent = () => {
                                 >
                                     {t('العربيه')}
                                 </Button>
+
+                                <Typography variant="body1" sx={{ color: 'body.light' }}>
+                                    {username ? `${t('Welcome')}, ${username}` : ''}{' '}
+                                </Typography>
+
                                 {isAuthenticated ? (
                                     <Button variant="contained" onClick={handleLogout}>
                                         {t('Logout')}

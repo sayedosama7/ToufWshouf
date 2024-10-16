@@ -1,5 +1,9 @@
-import { AttachMoney, Place, Update } from '@mui/icons-material';
-import { Typography, Paper, Stack } from '@mui/material';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import PlaceIcon from '@mui/icons-material/Place';
+import UpdateIcon from '@mui/icons-material/Update';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 import React, { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 interface Props {
@@ -30,7 +34,7 @@ const LocationAndPriceAndTime: FunctionComponent<Props> = ({
           spacing={1}
           sx={{ color: 'gray.main' }}
         >
-          <Place />
+          <PlaceIcon />
           <Stack direction="row" spacing={0.5}>
             <Typography variant="body1"> {t(' Location: ')} </Typography>
             <Typography variant="subtitle1" sx={{ color: 'body.main' }}>
@@ -45,9 +49,9 @@ const LocationAndPriceAndTime: FunctionComponent<Props> = ({
           spacing={1}
           sx={{ color: 'gray.main' }}
         >
-          <AttachMoney />
+          <AttachMoneyIcon />
           <Stack direction="row" spacing={0.5}>
-            <Typography variant="body1"> {t(' Price: ')} </Typography>
+            <Typography variant="body1"> {t('Start Price: ')} </Typography>
             <Typography variant="subtitle1" sx={{ color: 'body.main' }}>
               {t(`${price}`)}
             </Typography>
@@ -61,7 +65,7 @@ const LocationAndPriceAndTime: FunctionComponent<Props> = ({
           spacing={1}
           sx={{ color: 'gray.main' }}
         >
-          <Update />
+          <UpdateIcon />
           <Stack direction="row" spacing={0.5}>
             <Typography variant="body1"> {t(' Duration time: ')} </Typography>
             <Typography variant="subtitle1" sx={{ color: 'body.main' }}>

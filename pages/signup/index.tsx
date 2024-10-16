@@ -30,6 +30,7 @@ interface State {
     CNAME: string;
     TEL: string;
     NAT: string | number;
+    // NATLabel: string;
     C_ADDRESS: string;
     C_PASS: string;
     showPassword: boolean;
@@ -55,6 +56,7 @@ const Index: NextPage<Props> = () => {
         CNAME: '',
         TEL: '',
         NAT: '',
+        // NATLabel: '', 
         C_ADDRESS: '',
         C_PASS: '',
         RememberMe: false,
@@ -119,11 +121,13 @@ const Index: NextPage<Props> = () => {
                     console.log('User added successfully:', response);
                     localStorage.setItem('email', values.p_Mail);
                     localStorage.setItem('password', values.C_PASS);
+                    // localStorage.setItem('natLabel', countries.find(c => c.value === values.NAT)?.label || '');
                     setValues({
                         p_Mail: '',
                         CNAME: '',
                         TEL: '',
                         NAT: '',
+                        // NATLabel: '', 
                         C_ADDRESS: '',
                         C_PASS: '',
                         RememberMe: false,
@@ -167,6 +171,7 @@ const Index: NextPage<Props> = () => {
                 <ToastContainer />
                 <Head>
                     <title> Sign Up </title>
+                    <meta name="description" content="Sign Up Page" />
                 </Head>
                 <Paper elevation={0}>
                     <Container sx={{ py: 2 }}>
@@ -245,6 +250,7 @@ const Index: NextPage<Props> = () => {
                                         setValues({
                                             ...values,
                                             NAT: newValue ? newValue.value : '',
+                                            // NATLabel: newValue ? newValue.label : '',
                                         });
                                     }}
                                     renderInput={params => (
