@@ -1,13 +1,12 @@
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { FunctionComponent, Key, useState } from 'react';
+import { FunctionComponent, Key, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Counter from './Counter';
 import { useGetExtraQuery } from '@/store/Products/FetchExtraApi';
 import { useRouter } from 'next/router';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import Loading from '../Loading/Loading';
 
 interface Service {
     title: string;
@@ -34,18 +33,14 @@ interface ExtraService {
     item_ref: string;
 }
 
-const AdditionalServices: FunctionComponent<Props> = ({
-    numberOfPeople,
-    services,
-    setTotalPrice,
-}) => {
+const AdditionalServices: FunctionComponent<
+    Props & { selectedServices: any; setSelectedServices: any }
+> = ({ numberOfPeople, services, setTotalPrice, selectedServices, setSelectedServices }) => {
     const { t } = useTranslation();
     const router = useRouter();
     const { code, programyear } = router.query;
 
     const { data: extraServicesData, error, isLoading } = useGetExtraQuery({ code, programyear });
-
-    const [selectedServices, setSelectedServices] = useState<{ [key: string]: number }>({});
 
     const updatePrice = (
         serviceName: string,
@@ -53,15 +48,10 @@ const AdditionalServices: FunctionComponent<Props> = ({
         count: number,
         type: 'increase' | 'decrease'
     ) => {
-        setSelectedServices(prevServices => {
+        setSelectedServices((prevServices: { [x: string]: number }) => {
             const currentCount = prevServices[serviceName] || 0;
-            let newCount;
-
-            if (type === 'increase') {
-                newCount = currentCount + count;
-            } else {
-                newCount = Math.max(currentCount - count, 0);
-            }
+            const newCount =
+                type === 'increase' ? currentCount + count : Math.max(currentCount - count, 0);
 
             return {
                 ...prevServices,
@@ -69,91 +59,72 @@ const AdditionalServices: FunctionComponent<Props> = ({
             };
         });
 
-        if (type === 'increase') {
-            setTotalPrice(prevPrice => prevPrice + servicePrice * count);
-        } else if (type === 'decrease') {
-            setTotalPrice(prevPrice => prevPrice - servicePrice * count);
-        }
-    };
-
-    const handlePay = () => {
-        const servicesToBook = Object.entries(selectedServices)
-            .filter(([service, count]) => count > 0)
-            .map(([service, count]) => ({
-                service,
-                count,
-            }));
-
-        if (servicesToBook.length === 0) {
-            console.log('No services selected');
-            return;
-        }
-
-        servicesToBook.forEach(({ service, count }) => {
-            console.log(`Service: ${service}, Count: ${count}`);
+        setTotalPrice(prevPrice => {
+            return type === 'increase'
+                ? prevPrice + servicePrice * count
+                : prevPrice - servicePrice * count;
         });
     };
 
-    if (isLoading) return <Typography>Loading extra services...</Typography>;
     if (error) return <Typography>Error loading extra services.</Typography>;
 
     return (
-        <Grid container spacing={4} sx={{ mt: 4 }}>
-            <Grid item xs={6}>
-                <Paper elevation={1} sx={{ backgroundColor: 'gray.light', p: 3 }}>
-                    <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center' }}>
-                        {t('Number of people')}
-                        <span style={{ color: 'red', marginLeft: '8px' }}>
-                            {numberOfPeople !== null ? numberOfPeople : 0}
-                        </span>
-                    </Typography>
+        <>
+            {isLoading && <Loading />}
 
-                    {Array.isArray(services) && services.length > 0 ? (
-                        services.map(({ title, subtitle, price }, index) => (
-                            <Counter
-                                key={index}
-                                title={title}
-                                subtitle={`${subtitle}  ${price} EGP`}
-                                onChange={(count, type) => updatePrice(title, price, count, type)}
-                            />
-                        ))
-                    ) : (
-                        <Typography variant="body2" sx={{ color: 'gray.main' }}>
-                            No services available
+            <Grid container spacing={4} sx={{ mt: 4 }}>
+                <Grid item xs={6}>
+                    <Paper elevation={1} sx={{ backgroundColor: 'gray.light', p: 3 }}>
+                        <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center' }}>
+                            {t('Number of people')}
+                            <span style={{ color: 'red', marginLeft: '8px' }}>
+                                {numberOfPeople !== null ? numberOfPeople : 0}
+                            </span>
                         </Typography>
-                    )}
-                </Paper>
-            </Grid>
-            <Grid item xs={6}>
-                <Paper elevation={1} sx={{ backgroundColor: 'gray.light', p: 3 }}>
-                    <Typography variant="h5">{t('Additional Services')}</Typography>
-                    {extraServicesData?.items.length > 0 ? (
-                        extraServicesData.items.map(
-                            (item: ExtraService, index: Key | null | undefined) => (
+
+                        {Array.isArray(services) && services.length > 0 ? (
+                            services.map(({ title, subtitle, price }, index) => (
                                 <Counter
                                     key={index}
-                                    title={item.ext_srv}
-                                    subtitle={`${item.ext_descr} - ${item.ext_price} EGP - for ${item.p_category}`}
+                                    title={title}
+                                    subtitle={`${subtitle}  ${price} EGP`}
                                     onChange={(count, type) =>
-                                        updatePrice(item.ext_srv, item.ext_price, count, type)
+                                        updatePrice(title, price, count, type)
                                     }
                                 />
+                            ))
+                        ) : (
+                            <Typography variant="body2" sx={{ color: 'gray.main' }}>
+                                No services available
+                            </Typography>
+                        )}
+                    </Paper>
+                </Grid>
+                <Grid item xs={6}>
+                    <Paper elevation={1} sx={{ backgroundColor: 'gray.light', p: 3 }}>
+                        <Typography variant="h5">{t('Additional Services')}</Typography>
+                        {extraServicesData?.items.length > 0 ? (
+                            extraServicesData.items.map(
+                                (item: ExtraService, index: Key | null | undefined) => (
+                                    <Counter
+                                        key={index}
+                                        title={item.ext_srv}
+                                        subtitle={`${item.ext_descr} - ${item.ext_price} EGP - for ${item.p_category}`}
+                                        onChange={(count, type) =>
+                                            updatePrice(item.ext_srv, item.ext_price, count, type)
+                                        }
+                                    />
+                                )
                             )
-                        )
-                    ) : (
-                        <Typography variant="body2" sx={{ color: 'gray.main' }}>
-                            No additional services available
-                        </Typography>
-                    )}
-                </Paper>
+                        ) : (
+                            <Typography variant="body2" sx={{ color: 'gray.main' }}>
+                                No additional services available
+                            </Typography>
+                        )}
+                    </Paper>
+                </Grid>
             </Grid>
-            <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
-                <Button variant="contained" color="primary" onClick={handlePay}>
-                    Pay
-                </Button>
-            </Stack>
-        </Grid>
+        </>
     );
 };
-
 export default AdditionalServices;

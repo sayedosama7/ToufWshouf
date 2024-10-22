@@ -2,7 +2,6 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
-import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -17,6 +16,7 @@ import DetailsTabs from '../_components/DetailsTabs';
 import { useGetDetailsQuery } from '@/store/Products/FetchDetailsApi';
 import { useGetIncludingQuery } from '@/store/Products/FetchTourIncludingApi';
 import { useGetPolicyQuery } from '@/store/Products/FetchPolicyApi';
+import Loading from '@/components/Loading/Loading';
 
 interface Props {}
 
@@ -28,15 +28,6 @@ const Index: NextPage<Props> = () => {
     // fetch details
     const queryParams = code && programyear ? { code, programyear } : undefined;
     const { data, error, isLoading } = useGetDetailsQuery(queryParams);
-
-    // if (error) {
-    //     console.error('details API Error:', error);
-    // }
-
-    // if (data && data.items && data.items.length > 0) {
-    // } else {
-    //     console.error('details API not found:');
-    // }
 
     // fetch tour including
     const { data: includingData, error: includingError } = useGetIncludingQuery({
@@ -55,7 +46,7 @@ const Index: NextPage<Props> = () => {
     if (!code || !programyear) {
         return (
             <Typography variant="h6" color="error">
-                {t('Error: Missing product details parameters.')}
+                <Loading />
             </Typography>
         );
     }
@@ -68,12 +59,12 @@ const Index: NextPage<Props> = () => {
         console.error('policy API Error:', policyError);
     }
 
-    if (isLoading) {
-        return <CircularProgress />;
-    }
-
     if (!data || !data.items || data.items.length === 0) {
-        return <Typography variant="h6">{t('No product details found.')}</Typography>;
+        return (
+            <Typography variant="h6">
+                <Loading />
+            </Typography>
+        );
     }
 
     const productData = data.items[0];
@@ -84,6 +75,7 @@ const Index: NextPage<Props> = () => {
                 <title>{productData.ProgramName} - Product Details</title>
                 <meta name="description" content="Product Details" />
             </Head>
+            {isLoading && <Loading />}
             <Box>
                 <Container maxWidth="lg" sx={{ mt: 3 }}>
                     <TitleAndRating title={productData.ProgramName} />
@@ -100,13 +92,20 @@ const Index: NextPage<Props> = () => {
                                 data={[
                                     {
                                         title: 'Tour Including',
-                                        des:
-                                            including[0]?.TourIncludin ||
-                                            'No Tour Including available.',
+                                        des: (
+                                            <Typography component="div">
+                                                {including[0]?.TourIncludin ||
+                                                    'No Tour Including available.'}
+                                            </Typography>
+                                        ),
                                     },
                                     {
                                         title: 'Cancellation policy',
-                                        des: policy[0]?.policy || 'No Tour policy available.',
+                                        des: (
+                                            <Typography component="div">
+                                                {policy[0]?.policy || 'No Tour policy available.'}
+                                            </Typography>
+                                        ),
                                     },
                                 ]}
                             />

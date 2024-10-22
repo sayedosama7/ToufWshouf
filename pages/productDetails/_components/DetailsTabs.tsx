@@ -9,17 +9,18 @@ import Divider from '@mui/material/Divider';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Avatar from '@mui/material/Avatar';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useGetImgQuery } from '@/store/Products/FetchImagesApi';
 import BookButton from './BookButton';
-import CircularProgress from '@mui/material/CircularProgress';
 import { useGetReviewQuery } from '@/store/Products/FetchReviewApi';
 import { useGetSupplementQuery } from '@/store/Products/FetchSupplementApi';
 import UserRating from '@/components/products/UserRating';
 import ReviewForm from '../ReviewForm';
+import Loading from '@/components/Loading/Loading';
+
 interface Props {
     id: string | number | undefined;
     productData: {
@@ -35,6 +36,7 @@ interface Props {
         endDate: string;
     };
 }
+
 interface Supplement {
     code: number;
     'the price includes supplement': string;
@@ -43,25 +45,22 @@ interface Supplement {
 const DetailsTabs: FunctionComponent<Props> = ({ id, productData }) => {
     const { t } = useTranslation();
     const router = useRouter();
-    // const { code, programyear } = router.query;
     const [value, setValue] = React.useState(0);
 
     const code = router.query.code ? parseInt(router.query.code as string, 10) : undefined;
     const programyear = router.query.programyear
         ? parseInt(router.query.programyear as string, 10)
         : undefined;
-    // fetch images
-    const { data, error, isLoading } = useGetImgQuery({ code, programyear });
+
+    // Fetch images
+    const {
+        data,
+        error: imgError,
+        isLoading: isLoadingImages,
+    } = useGetImgQuery({ code, programyear });
     const tripImages = data?.items || [];
 
-    const [loadingImages, setLoadingImages] = useState(true);
-    useEffect(() => {
-        if (tripImages.length > 0 || error) {
-            setLoadingImages(false);
-        }
-    }, [tripImages, error]);
-
-    // fetch reviews
+    // Fetch reviews
     const {
         data: reviewData,
         error: reviewError,
@@ -69,44 +68,29 @@ const DetailsTabs: FunctionComponent<Props> = ({ id, productData }) => {
     } = useGetReviewQuery({ code, programyear });
     const reviews = reviewData?.items || [];
 
-    // fetch Supplement
+    // Fetch Supplement
     const {
         data: SupplementData,
-        error: SupplementError,
-        isLoading: SupplementLoading,
+        error: supplementError,
+        isLoading: supplementLoading,
     } = useGetSupplementQuery({ code, programyear });
     const Supplements = SupplementData?.items || [];
 
-    if (SupplementError) return <Typography>Error loading Supplements</Typography>;
-    if (SupplementLoading)
-        return (
-            <Typography>
-                <CircularProgress />
-            </Typography>
-        );
+    // Error and loading handling
+    if (imgError || reviewError || supplementError) {
+        return <Typography>Error loading data</Typography>;
+    }
 
-    if (reviewError) return <Typography>Error loading reviews</Typography>;
-    if (reviewLoading)
-        return (
-            <Typography>
-                <CircularProgress />
-            </Typography>
-        );
-
-    if (error) return <Typography>Error loading images</Typography>;
-    if (isLoading)
-        return (
-            <Typography>
-                <CircularProgress />
-            </Typography>
-        );
+    if (isLoadingImages || reviewLoading || supplementLoading) {
+        return <Loading />;
+    }
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
 
     return (
-        <div>
+        <Box>
             <Tabs
                 value={value}
                 onChange={handleChange}
@@ -119,7 +103,7 @@ const DetailsTabs: FunctionComponent<Props> = ({ id, productData }) => {
                 <Tab label="Reviews" />
             </Tabs>
 
-            {/* overview */}
+            {/* Overview */}
             <TabPanel value={value} index={0}>
                 <Typography variant="body2">
                     {t(productData?.OverView || 'No overview available')}
@@ -128,24 +112,24 @@ const DetailsTabs: FunctionComponent<Props> = ({ id, productData }) => {
                     {t('Additional Info')}
                 </Typography>
                 <Typography variant="body2">
-                    Start Date :{t(productData?.startDate || 'No overview available')}
+                    Start Date: {t(productData?.startDate || 'No start date available')}
                 </Typography>
                 <Typography variant="body2">
-                    End Date :{t(productData?.endDate || 'No overview available')}
+                    End Date: {t(productData?.endDate || 'No end date available')}
                 </Typography>
                 <BookButton code={code} programyear={programyear} />
             </TabPanel>
 
-            {/* supplement */}
+            {/* Supplement */}
             <TabPanel value={value} index={1}>
                 <Typography variant="subtitle2" sx={{ my: 2 }}>
                     {t('The price includes supplement:')}
                 </Typography>
                 <Stack direction="column" spacing={2}>
                     {Supplements.length > 0 ? (
-                        Supplements.map((supplement: Supplement, code: number) => (
+                        Supplements.map((supplement: Supplement, index: number) => (
                             <SupplementItem
-                                key={code}
+                                key={index}
                                 description={supplement['the price includes supplement']}
                             />
                         ))
@@ -163,21 +147,18 @@ const DetailsTabs: FunctionComponent<Props> = ({ id, productData }) => {
                     <TaskAltIcon />
                     <Typography variant="subtitle1">{t("All prices don't include VAT")}</Typography>
                 </Stack>
-                {/* <BookButton id={id} /> */}
             </TabPanel>
 
-            {/* tripImages */}
+            {/* Photo Gallery */}
             <TabPanel value={value} index={2}>
-                {isLoading ? (
-                    <CircularProgress />
-                ) : error ? (
-                    <Typography variant="body2">{t('Error loading images')}</Typography>
+                {isLoadingImages ? (
+                    <Loading />
                 ) : tripImages.length > 0 ? (
                     <ImageList sx={{ width: '100%', height: 450 }} cols={3} rowHeight={164}>
                         {tripImages.map((item: any, index: number) => (
                             <ImageListItem key={index} sx={{ mx: 2 }}>
                                 <Image
-                                    src={`http://${item.image}`}
+                                    src={`https://${item.image}`}
                                     alt={item.img_name}
                                     layout="fill"
                                     quality={100}
@@ -188,10 +169,9 @@ const DetailsTabs: FunctionComponent<Props> = ({ id, productData }) => {
                 ) : (
                     <Typography variant="body2">{t('No images available')}</Typography>
                 )}
-                {/* <BookButton id={id} /> */}
             </TabPanel>
 
-            {/* reviews */}
+            {/* Reviews */}
             <TabPanel value={value} index={3}>
                 <ReviewSection reviews={reviews} />
                 {code && programyear ? (
@@ -200,7 +180,7 @@ const DetailsTabs: FunctionComponent<Props> = ({ id, productData }) => {
                     <Typography variant="body2">Unable to load review form</Typography>
                 )}
             </TabPanel>
-        </div>
+        </Box>
     );
 };
 

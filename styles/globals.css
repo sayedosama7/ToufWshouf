@@ -3,21 +3,26 @@
   font-style: normal;
   font-weight: 600;
   src: local(''),
-    url('../assets/fonts/montserrat-v25-latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    url('../assets/fonts/montserrat-v25-latin-600.woff') format('woff');
+  /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
+
 @font-face {
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 400;
   src: local(''),
-    url('../assets/fonts/montserrat-v25-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    url('../assets/fonts/montserrat-v25-latin-regular.woff') format('woff');
+  /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
+
 @font-face {
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 700;
   src: local(''),
-    url('../assets/fonts/montserrat-v25-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    url('../assets/fonts/montserrat-v25-latin-700.woff') format('woff');
+  /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
 @font-face {
@@ -33,6 +38,7 @@
   font-weight: 400;
   src: local(''), url('../assets/fonts/Cairo-Light.woff') format('woff');
 }
+
 @font-face {
   font-family: 'Cairo';
   font-style: normal;
@@ -58,9 +64,26 @@ a {
 * {
   box-sizing: border-box;
 }
+
 input[type="date"]::-webkit-inner-spin-button,
 input[type="date"]::-webkit-calendar-picker-indicator {
-    display: none;
-    -webkit-appearance: none;
+  display: none;
+  -webkit-appearance: none;
 }
 
+.toast-orange {
+  background-color: #e97c34;
+  color: white;
+}
+
+.toast-orange .Toastify__progress-bar {
+  background-color: white;
+}
+
+.toast-orange .Toastify__close-button {
+  color: white;
+}
+
+.toast-orange .Toastify__toast-icon {
+  display: none !important;
+}

@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import Products from './Products';
 import { useGetProductQuery } from '@/store/Products/GetProductsApi';
 import { useRouter } from 'next/router';
+import Loading from '../Loading/Loading';
 
 interface Props {
     title: string;
@@ -20,23 +21,19 @@ const BestProducts: FunctionComponent<Props> = ({ title }) => {
     const { data, error, isLoading } = useGetProductQuery();
     const Router = useRouter();
 
-    if (isLoading) {
-        return <Typography>Loading...</Typography>;
-    }
-
     if (error || !data) {
-        return <Typography>Error loading products</Typography>;
+        return <Typography></Typography>;
     }
 
     const handleMoreDetails = () => {
         Router.push('/ProductDisplay');
     };
 
-    // Access products from the data object
     const products = data.items;
 
     return (
         <Box sx={{ mt: 11, mb: 3 }}>
+            {isLoading && <Loading />}
             <Typography variant="h2" sx={{ textAlign: 'center', mb: 3 }}>
                 {title}
             </Typography>
@@ -56,6 +53,7 @@ const BestProducts: FunctionComponent<Props> = ({ title }) => {
                         startprice={product.startprice}
                         img_path={product.img_path}
                         rate_review={product.rate_review}
+                        offerPrice={0}
                     />
                 ))}
             </Stack>

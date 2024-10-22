@@ -1,20 +1,16 @@
-import {
-  Autocomplete,
-  Button,
-  FormControl,
-  Grid,
-  InputAdornment,
-  MenuItem,
-  OutlinedInput,
-  TextField,
-} from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
+import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import TextField from '@mui/material/TextField';
 import React, { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Place,
-  ContactEmergency,
-  InsertInvitationRounded,
-} from '@mui/icons-material';
+import PlaceIcon from '@mui/icons-material/Place';
+import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
+import InsertInvitationRoundedIcon from '@mui/icons-material/InsertInvitationRounded';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { countries } from '@/constants/countries';
 
@@ -58,7 +54,7 @@ const Transportation: FunctionComponent<Props> = () => {
             placeholder={t('City')}
             startAdornment={
               <InputAdornment position="start" sx={{ color: 'main.lightGray' }}>
-                <Place />
+                <PlaceIcon />
               </InputAdornment>
             }
           />
@@ -104,7 +100,7 @@ const Transportation: FunctionComponent<Props> = () => {
             placeholder={t('Pick a date')}
             startAdornment={
               <InputAdornment position="start" sx={{ color: 'main.lightGray' }}>
-                <InsertInvitationRounded />
+                <InsertInvitationRoundedIcon />
               </InputAdornment>
             }
           />
@@ -124,7 +120,7 @@ const Transportation: FunctionComponent<Props> = () => {
             placeholder={t('Pick a date')}
             startAdornment={
               <InputAdornment position="start" sx={{ color: 'main.lightGray' }}>
-                <InsertInvitationRounded />
+                <InsertInvitationRoundedIcon />
               </InputAdornment>
             }
           />
@@ -150,7 +146,7 @@ const Transportation: FunctionComponent<Props> = () => {
             }}
             startAdornment={
               <InputAdornment position="start" sx={{ color: 'main.lightGray' }}>
-                <ContactEmergency />
+                <ContactEmergencyIcon />
               </InputAdornment>
             }
           >

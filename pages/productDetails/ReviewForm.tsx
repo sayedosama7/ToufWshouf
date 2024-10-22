@@ -8,8 +8,8 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import CircularProgress from '@mui/material/CircularProgress';
 import Rating from '@mui/material/Rating';
+import Loading from '@/components/Loading/Loading';
 
 const ReviewForm = ({ code, programyear }: { code: number; programyear: number }) => {
     const [review, setReview] = useState('');
@@ -65,7 +65,7 @@ const ReviewForm = ({ code, programyear }: { code: number; programyear: number }
                 />
             </Box>
 
-            {isLoading && <CircularProgress />}
+            {isLoading && <Loading />}
             {isSuccess && (
                 <Typography variant="body2" color="success.main">
                     Review submitted successfully!

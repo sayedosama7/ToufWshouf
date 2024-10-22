@@ -1,73 +1,83 @@
-import React from "react";
-import Slider from "react-slick";
+import React, { useEffect, useState } from 'react';
+import Slider from 'react-slick';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
+import BackgroundImage from '../../../components/ui/BackgroundImage';
+import axios from 'axios';
 
-import Sliderbg1 from "@/assets/images/sliderbg1.jpg";
-import Sliderbg2 from "@/assets/images/sliderbg2.jpg";
-import Sliderbg3 from "@/assets/images/sliderbg3.jpg";
-import { Box, Container, Stack, Typography } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import BackgroundImage from "../../../components/ui/BackgroundImage";
+interface SliderItem {
+    SliderText: string;
+    SLIDESUBTEXT: string;
+    SLIDEPATH: string;
+}
 
 export default function Carousel() {
-  const { t } = useTranslation();
+    const { t } = useTranslation();
+    const [sliderData, setSliderData] = useState<SliderItem[]>([]);
 
-  var settings = {
-    dots: true,
-    arrows: false,
-    infinite: true,
-    speed: 500,
-    LazyLoadTypes: "progressively",
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    customPaging: function () {
-      return <div className="dot"></div>;
-    },
-    dotsClass: "slick-dots slick-thumb",
-  };
+    useEffect(() => {
+        const fetchSliderData = async () => {
+            try {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/Slider`);
+                setSliderData(response.data.Slider);
+            } catch (error) {
+                console.error('Error fetching slider data:', error);
+            }
+        };
 
-  const imagesStyle = {
-    height: "79vh",
-    width: "100%",
-    backgroundPosition: "top",
-    position: "relative",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-  };
+        fetchSliderData();
+    }, []);
 
-  const ImagesArr = [Sliderbg1, Sliderbg2, Sliderbg3];
-  return (
-    <Box>
-      <Slider {...settings}>
-        {ImagesArr.map((image) => (
-          <BackgroundImage key={Math.random()} imageSrc={image} height={"79vh"}>
-            <Stack
-              direction="column"
-              alignItems="center"
-              justifyContent="start"
-              sx={{
-                height: "100%",
-                position: "relative",
-                zIndex: 5,
-                pt: "100px",
-                color: "body.light",
-              }}
-            >
-              <Typography variant="h1">
-                {t("5 days, 4 nights, Novotel Marsa Alam")}
-              </Typography>
-              <Container maxWidth="md">
-                <Typography variant="body1" sx={{textAlign:"center" ,mt:2}}>
-                  {t(
-                    "A wonderful tour around Cairo through the open two-story bus to see most of the various landmarks of Cairo and Giza Pyramids of Giza and the Egyptian Museum and lunch through the Nile Crystal cruise."
-                  )}
-                </Typography>
-              </Container>
-            </Stack>
-          </BackgroundImage>
-        ))}
-      </Slider>
-    </Box>
-  );
+    const settings = {
+        dots: true,
+        arrows: false,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        customPaging: () => <div className="dot"></div>,
+        dotsClass: 'slick-dots slick-thumb',
+    };
+
+    return (
+        <Box>
+            <Slider {...settings}>
+                {sliderData.map((slide, index) => (
+                    <BackgroundImage
+                        key={slide.SLIDEPATH}
+                        imageSrc={slide.SLIDEPATH}
+                        height={'79vh'}
+                        priority={index === 0} 
+                    >
+                        <Stack
+                            direction="column"
+                            alignItems="center"
+                            justifyContent="start"
+                            sx={{
+                                height: '100%',
+                                position: 'relative',
+                                zIndex: 5,
+                                pt: '100px',
+                                color: 'body.light',
+                            }}
+                        >
+                            <Typography variant="h2" sx={{ textAlign: 'center' }}>
+                                {t(slide.SliderText)}
+                            </Typography>
+                            <Container maxWidth="md">
+                                <Typography variant="body1" sx={{ textAlign: 'center', mt: 2 }}>
+                                    {t(slide.SLIDESUBTEXT)}
+                                </Typography>
+                            </Container>
+                        </Stack>
+                    </BackgroundImage>
+                ))}
+            </Slider>
+        </Box>
+    );
 }

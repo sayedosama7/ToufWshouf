@@ -7,29 +7,35 @@ import CardContent from '@mui/material/CardContent';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import React, { FunctionComponent } from 'react';
-import { Product } from '@/data/products';
 import WishlistButton from '@/components/products/WishlistButton';
 import Price from '@/components/products/Price';
 import ProductRating from '@/components/products/ProductRating';
 import { useRouter } from 'next/router';
+import Loading from '@/components/Loading/Loading';
+import { Product } from '@/data/products';
+import { ToastContainer } from 'react-toastify';
 
 interface Props {
     myBooking?: boolean;
     productData: Product;
 }
-
-const BestProducts: FunctionComponent<Props> = () => {
+const BestProducts: FunctionComponent<Product> = () => {
     const { data, error, isLoading } = useGetProductQuery();
     const router = useRouter();
-
-    if (isLoading) return <p>Loading...</p>;
-    if (error || !data) return <p>Error loading products</p>;
+    if (error || !data)
+        return (
+            <>
+                <Loading />
+            </>
+        );
 
     const products = data.items;
 
     return (
         <div className="container">
             <div className="row">
+                <ToastContainer />
+                {isLoading && <Loading />}
                 <h2 className="my-4 fw-bold">All Trips</h2>
                 {products.map(product => (
                     <div key={product.code} className="col-md-4">
@@ -57,7 +63,9 @@ const BestProducts: FunctionComponent<Props> = () => {
                                 >
                                     <Link
                                         onClick={() =>
-                                            router.push(`detailsesProgram/${product.code}`)
+                                            router.push(
+                                                `/productDetails/${product.code}/${product.programyear}`
+                                            )
                                         }
                                         sx={{
                                             position: 'absolute',
@@ -87,7 +95,10 @@ const BestProducts: FunctionComponent<Props> = () => {
                                             price={product.startprice ?? 0}
                                             offerPrice={product.offerPrice ?? 0}
                                         />
-                                        <WishlistButton id={''} />
+                                        <WishlistButton
+                                            id={product.code.toString()}
+                                            productData={product}
+                                        />
                                     </Stack>
 
                                     <Typography gutterBottom variant="subtitle1" component="div">
