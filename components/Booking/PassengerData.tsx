@@ -13,7 +13,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Link from 'next/link';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AdditionalServices from './AdditionalServices';
 import { useRouter } from 'next/router';
@@ -23,7 +23,10 @@ import { skipToken } from '@reduxjs/toolkit/dist/query';
 import { useAddReservationMutation } from '@/store/Reservation/AddReservationApi';
 import { useAddExtraMutation } from '@/store/Reservation/AddExtraApi';
 import { useGetExtraQuery } from '@/store/Products/FetchExtraApi';
-// import axios from 'axios';
+import Loading from '../Loading/Loading';
+import { useAddReservationDetailsMutation } from '@/store/Reservation/AddReservationDetailsApi';
+import { store } from '@/store/store';
+import { toast } from 'react-toastify';
 
 const names = ['18:00', '19:00', '20:00', '22:00', '15:00'];
 
@@ -32,12 +35,24 @@ interface ProgramGroupItem {
     prog_grp_from: string;
     pax_aval: number;
 }
-
+interface ExtraService {
+    ext_sp: number;
+    ext_srv: string;
+    ext_descr: string;
+    ext_price: number;
+    p_category: string;
+    ext_comm: number;
+    ext_tax: number;
+    prog_code: number;
+    prog_year: number;
+    item_ref: string;
+}
 interface Props {
     handleNext: Function;
+    setTripDate: (date: string | null) => void;
 }
 
-const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
+const PassengerData: FunctionComponent<Props> = ({ handleNext, setTripDate }) => {
     const { t } = useTranslation();
     const [personName, setPersonName] = useState<string[]>([]);
     const [selectedDate, setSelectedDate] = useState<string>('');
@@ -63,7 +78,10 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
         groupNumber !== null ? { code, programyear, groupNo: groupNumber } : skipToken
     );
 
-    const productGroup: ProgramGroupItem[] = programGroupData?.items || [];
+    const productGroup: ProgramGroupItem[] = useMemo(
+        () => programGroupData?.items || [],
+        [programGroupData]
+    );
 
     useEffect(() => {
         if (programGroupData?.items && programGroupData.items.length > 0) {
@@ -80,20 +98,20 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
             }
         }
     }, [programGroupData?.items]);
+    const [selectedServices, setSelectedServices] = useState<{ [key: string]: number }>({});
+
+    useEffect(() => {
+        if (productGroup.length > 0) {
+            const defaultDate = productGroup[0].prog_grp_from;
+            setSelectedDate(defaultDate);
+            setTripDate(defaultDate);
+        }
+    }, [productGroup, setTripDate]);
 
     const handleDateChange = (event: SelectChangeEvent<string>) => {
         const selectedValue = event.target.value;
         setSelectedDate(selectedValue);
-
-        const selectedGroup = productGroup.find(item => item.prog_grp_from === selectedValue);
-
-        if (selectedGroup) {
-            setSelectedPaxAval(selectedGroup.pax_aval);
-            setGroupNumber(selectedGroup.prog_grp_no);
-        } else {
-            console.error('No group found for the selected date');
-            setGroupNumber(null);
-        }
+        setTripDate(selectedValue);
     };
 
     const handleChange = (event: SelectChangeEvent<typeof personName>) => {
@@ -110,129 +128,164 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
     }));
 
     const [addReservation] = useAddReservationMutation();
+    const [addReservationDetails] = useAddReservationDetailsMutation();
     const [addExtra] = useAddExtraMutation();
     const { data: extra } = useGetExtraQuery({ code, programyear });
+    const extraData = extra?.items[0];
 
-    const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
+    const isBrowser = typeof window !== 'undefined';
+
     const customerData = {
-        CustCode: localStorage.getItem('custcode'),
-        TELEPHONE: localStorage.getItem('TELEPHONE'),
+        CustCode: isBrowser ? localStorage.getItem('custcode') : null,
+        TELEPHONE: isBrowser ? localStorage.getItem('TELEPHONE') : null,
     };
 
     useEffect(() => {
-        if (programGroupData?.items && programGroupData.items.length > 0) {
+        if (programGroupData?.items?.length) {
             const firstDate = programGroupData.items[0].prog_grp_from;
             setSelectedDate(firstDate);
 
             const selectedGroup = programGroupData.items.find(
-                (item: ProgramGroupItem) => item.prog_grp_from === firstDate
+                (item: { prog_grp_from: string }) => item.prog_grp_from === firstDate
             );
-
             if (selectedGroup) {
                 setSelectedPaxAval(selectedGroup.pax_aval);
                 setGroupNumber(selectedGroup.prog_grp_no);
             }
         }
-    }, [programGroupData?.items]);
+    }, [programGroupData]);
 
     if (groupPriceData && groupPriceData.items && groupPriceData.items.length > 0) {
     }
 
-    const handlePay = async () => {
-        const progGrpNo = groupPriceData.items[0].prog_grp_no;
-
-        setIsLoading(true);
-        setErrorMessage('');
-
+    const handlePayment = async (selectedServices: { [key: string]: number }) => {
         try {
-            // إرسال بيانات الحجز
-            const reservationResponse = await addReservation({
-                CUST_REF: customerData.CustCode,
-                TELEPHONE: customerData.TELEPHONE,
-                PROG_GRP_NO: progGrpNo,
-                PROG__CODE: code,
-                PROG_YEAR: programyear,
-                PAX_TYPE: groupPriceData.items[0].pax_type,
-                PAX_COUNT: selectedPaxAval,
-            }).unwrap();
-
-            console.log('Reservation added successfully:', reservationResponse);
-
-            // بعد نجاح الحجز، إرسال البيانات الإضافية
-            const extraServiceResponse = await addExtra({
-                CUST_REF: customerData.CustCode,
-                REF_NO: reservationResponse.REF_NO,
-                RES_SP: reservationResponse.RESSP,
-                SRV_TYPE: reservationResponse.p_category,
-                PAX_TYPE: groupPriceData.items[0].pax_type,
-                PAX_COUNT: selectedPaxAval,
-                ITEM_REF: extra.item_ref,
-            }).unwrap();
-
-            console.log('Extra services added successfully:', extraServiceResponse);
-
-            handleNext();
-        } catch (error) {
-            if (error instanceof Error) {
-                console.error('Error during reservation or extra service:', error.message);
-                setErrorMessage('Failed to complete the reservation. Please try again.');
-            } else if (typeof error === 'object' && error !== null && 'response' in error) {
-                console.error('API Error:', (error as any).response?.data || error);
-                setErrorMessage('Failed to complete the reservation. Please try again.');
-            } else {
-                console.error('Unexpected error:', error);
-                setErrorMessage('An unexpected error occurred. Please try again.');
+            const progGrpNo = groupPriceData?.items?.[0]?.prog_grp_no;
+            if (!progGrpNo) {
+                console.error('No program group number found.');
+                return;
             }
-        } finally {
-            setIsLoading(false);
+
+            const reservationResponse = await addReservation({
+                CUST_REF: localStorage.getItem('custcode'),
+                TELEPHONE: localStorage.getItem('TELEPHONE'),
+                PROG_GRP_NO: progGrpNo,
+                PROG_CODE: code,
+                PROG_YEAR: programyear,
+            }).unwrap();
+
+            console.log('Reservation added:', reservationResponse);
+
+            if (reservationResponse.REF_NO) {
+                const REF_NO = reservationResponse.REF_NO;
+                const RESSP = reservationResponse.RESSP;
+                sessionStorage.setItem('ref_no', REF_NO);
+                sessionStorage.setItem('Res_sp', RESSP);
+
+                const servicesToBook = Object.entries(selectedServices).filter(
+                    ([service, count]) => Number(count) > 0
+                );
+
+                if (servicesToBook.length > 0) {
+                    const extraRequests = [];
+
+                    for (const [serviceName, count] of servicesToBook) {
+                        const paxData = groupPriceData.items.find(
+                            (item: { pax_type: string }) => item.pax_type === serviceName
+                        );
+
+                        if (!paxData) {
+                            continue;
+                        }
+
+                        let paxType: string;
+
+                        switch (paxData.pax_type) {
+                            case 'CHILD FROM 1 TO 6':
+                                paxType = 'CH1';
+                                break;
+                            case 'CHILD FROM 6 TO 12':
+                                paxType = 'CH2';
+                                break;
+                            case 'ADULT':
+                                paxType = 'A';
+                                break;
+                            default:
+                                console.error(`Unknown pax type: ${paxData.pax_type}`);
+                                continue;
+                        }
+
+                        const reservationDetailsResponse = await addReservationDetails({
+                            REF_NO: sessionStorage.getItem('ref_no'),
+                            RESSP: sessionStorage.getItem('Res_sp'),
+                            CUST_REF: localStorage.getItem('custcode'),
+                            CODE: code,
+                            YEAR: programyear,
+                            PAX_TYPE: paxType,
+                            PAX_COUNT: count,
+                        }).unwrap();
+
+                        if (
+                            reservationDetailsResponse.Error &&
+                            reservationDetailsResponse.Error === 'You insert this type last'
+                        ) {
+                            console.error('Error: This type was added previously.');
+                            toast.error('Error: This type was added previously.');
+                            return;
+                        }
+
+                        if (extraData?.ext_srv && extraData?.p_category && extraData?.item_ref) {
+                            extraRequests.push({
+                                CUST_REF: localStorage.getItem('custcode'),
+                                REF_NO: sessionStorage.getItem('ref_no'),
+                                RES_SP: sessionStorage.getItem('Res_sp'),
+                                SRV_TYPE: extraData.ext_srv,
+                                PAX_TYPE: extraData.p_category,
+                                PAX_COUNT: count,
+                                ITEM_REF: extraData.item_ref,
+                            });
+                        }
+                    }
+
+                    if (extraRequests.length > 0) {
+                        for (const extraRequest of extraRequests) {
+                            const extraResponse = await addExtra({
+                                code: code,
+                                year: programyear,
+                                ...extraRequest,
+                            }).unwrap();
+
+                            if (
+                                extraResponse.Error &&
+                                extraResponse.Error === 'You insert this type last'
+                            ) {
+                                console.error(
+                                    'Error: This type was added previously for extra services.'
+                                );
+                                toast.error(
+                                    'Error: This type was added previously for extra services.'
+                                );
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                handleNext();
+            } else {
+                console.error('Reservation was not successful:', reservationResponse);
+            }
+        } catch (error) {
+            console.error('Error during payment process:', error);
         }
     };
-
-    // const handlePay = async () => {
-    //     try {
-    //         const code = '9'; // مثال لقيمة code
-    //         const year = '2024'; // مثال لقيمة year
-
-    //         const url = `http://app.misrtravelco.net:4444/ords/invoice/programes/ExtraProgram/${code}/${year}`;
-
-    //         const body = new FormData();
-    //         body.append('CUST_REF', '10');
-    //         body.append('REF_NO', '770060');
-    //         body.append('RES_SP', '48');
-    //         body.append('SRV_TYPE', 'TOR');
-    //         body.append('PAX_TYPE', 'CH1');
-    //         body.append('PAX_COUNT', '2');
-    //         body.append('ITEM_REF', 'TOU-102024E1148CH1');
-
-    //         // تمرير code و year كـ query parameters
-    //         const response = await axios.post(url, body, {
-    //             headers: { 'Content-Type': 'multipart/form-data' },
-    //         });
-
-    //         console.log('Reservation added successfully:', response.data);
-    //     } catch (error) {
-    //         if (axios.isAxiosError(error)) {
-    //             // تعامل مع أخطاء Axios فقط
-    //             if (error.response) {
-    //                 console.error('Server error:', error.response.data);
-    //                 alert('There was an issue with the request. Please try again later or contact support.');
-    //             } else if (error.request) {
-    //                 console.error('No response from server:', error.request);
-    //             } else {
-    //                 console.error('Error setting up the request:', error.message);
-    //             }
-    //         } else {
-    //             // إذا كان الخطأ ليس من Axios، تعامل معه هنا
-    //             console.error('An unexpected error occurred:', error);
-    //         }}
-    // };
 
     return (
         <Box sx={{ mt: 5 }}>
             {programGroupLoading || groupPriceLoading ? (
-                <p>Loading...</p>
+                <Loading />
             ) : programGroupError || groupPriceError ? (
                 <p>Error loading details.</p>
             ) : (
@@ -310,8 +363,10 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
 
                     <AdditionalServices
                         numberOfPeople={selectedPaxAval}
-                        services={additionalServices}
                         setTotalPrice={setTotalPrice}
+                        services={additionalServices}
+                        selectedServices={selectedServices}
+                        setSelectedServices={setSelectedServices}
                     />
                     <Stack
                         direction="row"
@@ -340,10 +395,21 @@ const PassengerData: FunctionComponent<Props> = ({ handleNext }) => {
 
                     <Grid container sx={{ my: 3 }} justifyContent="space-between">
                         <Grid item xs={3}>
-                            <Button onClick={handlePay} variant="contained" fullWidth size="large">
-                                {t('Pay')}
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => {
+                                    handlePayment(selectedServices);
+                                }}
+                            >
+                                {t('Proceed to Payment')}
                             </Button>
                         </Grid>
+                        {errorMessage && (
+                            <Typography variant="subtitle1" color="error" sx={{ mt: 2 }}>
+                                {errorMessage}
+                            </Typography>
+                        )}
                         <Grid item xs={3}>
                             <Button
                                 variant="outlined"

@@ -1,18 +1,29 @@
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import React, { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
 import Price from './Price';
 import WishlistButton from './WishlistButton';
 import { Stack } from '@mui/system';
+import { Product } from '@/data/products';
 
 interface Props {
     src: any;
     price: number;
     offerPrice: number | undefined;
     wishlist?: boolean;
+    code: number;
+    productData: any;
 }
-const ImageWithPrice: FunctionComponent<Props> = ({ src, price, offerPrice, wishlist }) => {
+
+const ImageWithPrice: FunctionComponent<Props> = ({
+    src,
+    price,
+    offerPrice,
+    wishlist,
+    code,
+    productData,
+}) => {
     const { t } = useTranslation();
 
     return (
@@ -38,7 +49,7 @@ const ImageWithPrice: FunctionComponent<Props> = ({ src, price, offerPrice, wish
                 sx={{ width: '100%', p: 1 }}
             >
                 <Price price={price} offerPrice={offerPrice} />
-                {wishlist && <WishlistButton id={''} />}
+                {wishlist && <WishlistButton id={code.toString()} productData={productData} />}
             </Stack>
         </Box>
     );

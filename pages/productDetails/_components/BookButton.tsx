@@ -16,8 +16,15 @@ interface Props {
 const BookButton: FunctionComponent<Props> = ({ code, programyear }) => {
     const { t } = useTranslation();
     const router = useRouter();
+
     const handleBooking = () => {
-        router.push(`/booking/${code}/${programyear}`);
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            router.push('/login');
+        } else {
+            router.push(`/booking/${code}/${programyear}`);
+        }
     };
 
     return (

@@ -18,13 +18,13 @@ const Counter: FunctionComponent<Props> = ({ title, subtitle, onChange }) => {
     const [count, setCount] = useState(0);
 
     const handleIncrease = () => {
-        setCount(prevCount => prevCount + 1);
+        setCount(count + 1);
         onChange(1, 'increase');
     };
 
     const handleDecrease = () => {
         if (count > 0) {
-            setCount(prevCount => prevCount - 1);
+            setCount(count - 1);
             onChange(1, 'decrease');
         }
     };

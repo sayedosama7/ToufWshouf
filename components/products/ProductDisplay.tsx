@@ -1,4 +1,10 @@
-import { Grid, Box, Stack, Typography, Button, Paper, IconButton } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import IconButton from '@mui/material/IconButton';
 import React, { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import DeleteIcon from '@mui/icons-material/Delete';

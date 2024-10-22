@@ -21,10 +21,23 @@ const Products: FunctionComponent<Product> = ({
     startprice,
     img_path,
     offerPrice,
-    programyear
+    programyear,
+    rating,
 }) => {
     const { t } = useTranslation();
     const router = useRouter();
+
+    const productData = {
+        code,
+        programname,
+        rate_review,
+        rating,
+        startprice,
+        img_path,
+        offerPrice,
+        programyear,
+    };
+
     return (
         <Grid item container xs={3}>
             <Card
@@ -44,7 +57,7 @@ const Products: FunctionComponent<Product> = ({
                     }}
                 >
                     <Link
-                        onClick={() => router.push(`/productDetails/${code}/${programyear}`)} // Assuming 2024 as the programyear
+                        onClick={() => router.push(`/productDetails/${code}/${programyear}`)}
                         sx={{
                             position: 'absolute',
                             top: 0,
@@ -71,7 +84,7 @@ const Products: FunctionComponent<Product> = ({
                         }}
                     >
                         <Price price={startprice ?? 0} offerPrice={offerPrice ?? 0} />
-                        <WishlistButton id={''} />
+                        <WishlistButton id={code.toString()} productData={productData} />
                     </Stack>
 
                     <Typography gutterBottom variant="subtitle1" component="div">

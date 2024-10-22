@@ -10,6 +10,7 @@ import BackgroundImage from '@/components/ui/BackgroundImage';
 import BookingStepper from '@/components/Booking/Stepper';
 import { useGetDetailsQuery } from '@/store/Products/FetchDetailsApi';
 import { useRouter } from 'next/router';
+import Loading from '@/components/Loading/Loading';
 
 const Book: NextPage = () => {
     const { t } = useTranslation();
@@ -18,9 +19,7 @@ const Book: NextPage = () => {
 
     const queryParams = code && programyear ? { code, programyear } : null;
     const { data, error, isLoading } = useGetDetailsQuery(queryParams);
-    if (isLoading) {
-        return <p>Loading...</p>;
-    }
+
     if (error) {
         return <p>Error loading details.</p>;
     }
@@ -31,6 +30,8 @@ const Book: NextPage = () => {
             <Head>
                 <title>Booking</title>
             </Head>
+            {isLoading && <Loading />}
+
             <BackgroundImage imageSrc={productDetailsImg}>
                 <Stack
                     direction="row"

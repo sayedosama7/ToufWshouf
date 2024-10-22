@@ -15,7 +15,6 @@ import { useAppSelector, useAppDispatch } from '@/hooks/useStore';
 import { getLanguage, toggleLanguage } from '@/store/languageSlice';
 import { ClientStorage } from '@/hooks/useLocalStroge';
 import IsAuthPages from '@/hooks/auth/useIsAuthPages';
-import { toast } from 'react-toastify';
 
 const Topbar: FunctionComponent = () => {
     const { t } = useTranslation();
@@ -49,12 +48,8 @@ const Topbar: FunctionComponent = () => {
     }, [router.pathname]);
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('isAuthenticated');
-        localStorage.removeItem('NAME');
-        localStorage.removeItem('custcode');
+        localStorage.clear();
         setIsAuthenticated(false);
-        toast.success('Logout successful!');
         router.push('/login');
     };
 

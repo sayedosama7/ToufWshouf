@@ -11,17 +11,25 @@ import { FetchTourIncludingApi } from './Products/FetchTourIncludingApi';
 import { FetchPolicyApi } from './Products/FetchPolicyApi';
 import { VerifyEmailApi } from './Register/VerifyEmailApi';
 import { AddReviewApi } from './Products/AddReviewApi';
-import userSlice  from './Register/userSlice';
+import userSlice from './Register/userSlice';
 import { FetchProgramGroupsApi } from './Products/FetchProgramGroupsApi';
 import { FetchGroupPriceApi } from './Products/FetchGroupPriceApi';
 import { FetchExtraApi } from './Products/FetchExtraApi';
 import { AddReservationApi } from './Reservation/AddReservationApi';
 import { AddExtraApi } from './Reservation/AddExtraApi';
+import { AddReservationDetailsApi } from './Reservation/AddReservationDetailsApi';
+import { FetchPaymentApi } from './Reservation/FetchPaymentApi';
+import { FetchForgetPassDataApi } from './ForgetPassword/FetchForgetPassDataApi';
+import { VerifyPasswordApi } from './ForgetPassword/VerifyPasswordApi';
+import { ResetPasswordApi } from './ForgetPassword/ResetPasswordApi';
+import { FetchNationalityApi } from './Filter/FetchNationalityApi';
+import  wishlistSlice  from './wishlistSlice';
 
 export const store = configureStore({
     reducer: {
         language: languageSlice,
         user: userSlice,
+        wishlist: wishlistSlice,
         [FetchProductApi.reducerPath]: FetchProductApi.reducer,
         [RegisterApi.reducerPath]: RegisterApi.reducer,
         [LoginApi.reducerPath]: LoginApi.reducer,
@@ -38,6 +46,13 @@ export const store = configureStore({
         [FetchExtraApi.reducerPath]: FetchExtraApi.reducer,
         [AddReservationApi.reducerPath]: AddReservationApi.reducer,
         [AddExtraApi.reducerPath]: AddExtraApi.reducer,
+        [AddReservationDetailsApi.reducerPath]: AddReservationDetailsApi.reducer,
+        [FetchPaymentApi.reducerPath]: FetchPaymentApi.reducer,
+        [FetchForgetPassDataApi.reducerPath]: FetchForgetPassDataApi.reducer,
+        [ResetPasswordApi.reducerPath]: ResetPasswordApi.reducer,
+        [VerifyPasswordApi.reducerPath]: VerifyPasswordApi.reducer,
+        [FetchNationalityApi.reducerPath]: FetchNationalityApi.reducer,
+        
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware()
@@ -57,6 +72,12 @@ export const store = configureStore({
             .concat(FetchExtraApi.middleware)
             .concat(AddReservationApi.middleware)
             .concat(AddExtraApi.middleware)
+            .concat(AddReservationDetailsApi.middleware)
+            .concat(FetchPaymentApi.middleware)
+            .concat(FetchForgetPassDataApi.middleware)
+            .concat(ResetPasswordApi.middleware)
+            .concat(VerifyPasswordApi.middleware)
+            .concat(FetchNationalityApi.middleware)
 });
 
 export type AppDispatch = typeof store.dispatch;
