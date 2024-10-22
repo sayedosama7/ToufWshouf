@@ -12,12 +12,21 @@ import Button from '@mui/material/Button';
 import { useTranslation } from 'react-i18next';
 import TextField from '@mui/material/TextField';
 import { useRouter } from 'next/router';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/Visibility';
 
 const ResetPasswordComponent = () => {
     const { t } = useTranslation();
     const router = useRouter();
     const [resetPassword, { isLoading }] = useResetPasswordMutation();
     const [newPassword, setNewPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
 
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewPassword(e.target.value);
@@ -45,9 +54,18 @@ const ResetPasswordComponent = () => {
                     pass: newPassword,
                 }).unwrap();
 
-                toast.success('Password Updated Successfully');
+                toast.success('Password Updated Successfully', {
+                    className: 'toast-orange',
+                    autoClose: 2000,
+                });
 
-                router.push('/login');
+                sessionStorage.removeItem('Otp-TransNo');
+                sessionStorage.removeItem('Otp-Verify');
+                sessionStorage.removeItem('userEmailverify');
+
+                setTimeout(() => {
+                    router.push('/login');
+                }, 2000);
             } catch (err) {
                 console.error('API response error:', err);
                 toast.error('unexpected error please try again');
@@ -87,10 +105,27 @@ const ResetPasswordComponent = () => {
                                         variant="outlined"
                                         placeholder={t('Enter password')}
                                         sx={{ mt: 1 }}
-                                        type="password"
+                                        type={showPassword ? 'text' : 'password'}
                                         value={newPassword}
                                         onChange={handlePasswordChange}
                                         required
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={handleClickShowPassword}
+                                                        edge="end"
+                                                    >
+                                                        {showPassword ? (
+                                                            <VisibilityOffIcon />
+                                                        ) : (
+                                                            <VisibilityIcon />
+                                                        )}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }}
                                     />
                                 </Grid>
 

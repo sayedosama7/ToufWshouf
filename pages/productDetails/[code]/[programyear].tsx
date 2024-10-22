@@ -45,8 +45,8 @@ const Index: NextPage<Props> = () => {
 
     if (!code || !programyear) {
         return (
-            <Typography variant="h6" color="error">
-                <Loading />
+            <Typography variant="h6" sx={{ padding: '10px', textAlign: 'center' }}>
+                Error Loading Trips
             </Typography>
         );
     }
@@ -61,8 +61,8 @@ const Index: NextPage<Props> = () => {
 
     if (!data || !data.items || data.items.length === 0) {
         return (
-            <Typography variant="h6">
-                <Loading />
+            <Typography variant="h6" sx={{ padding: '10px', textAlign: 'center' }}>
+                Error Loading Trips
             </Typography>
         );
     }

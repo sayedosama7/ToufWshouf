@@ -64,6 +64,7 @@ export const handleLogin = async (
 
                 toast.success('Login successful!', {
                     autoClose: 2000,
+                    className: 'toast-orange',
                 });
 
                 setTimeout(() => {

@@ -43,7 +43,7 @@ const BestOffers: FunctionComponent<Props> = ({ title }) => {
                 alignItems="center"
                 sx={{ mb: 2 }}
             >
-                {products.slice(4, 8).map(product => (
+                {products.slice(5, 8).map(product => (
                     <Products
                         key={product.code}
                         code={product.code}

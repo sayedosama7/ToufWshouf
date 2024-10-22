@@ -22,12 +22,7 @@ interface Props {
 const BestProducts: FunctionComponent<Product> = () => {
     const { data, error, isLoading } = useGetProductQuery();
     const router = useRouter();
-    if (error || !data)
-        return (
-            <>
-                <Loading />
-            </>
-        );
+    if (error || !data) return <>{error}</>;
 
     const products = data.items;
 

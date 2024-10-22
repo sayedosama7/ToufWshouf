@@ -34,6 +34,8 @@ const WishlistButton: FunctionComponent<Props> = ({ id, productData }) => {
             dispatch(addToWishlist(productData));
             toast.success(t('trip added to wish list') as string, {
                 className: 'toast-orange',
+                autoClose: 2000,
+
             });
         }
     };

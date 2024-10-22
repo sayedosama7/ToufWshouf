@@ -85,6 +85,7 @@ export const RegisterHandle = (
                     'Registration successful. Please check your email to verify your account.',
                     {
                         autoClose: 2000,
+                        className: 'toast-orange',
                     }
                 );
 

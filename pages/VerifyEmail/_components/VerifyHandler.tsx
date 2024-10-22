@@ -72,7 +72,10 @@ const VerifyHandler: React.FC<VerifyEmailHandlerProps> = ({
                 return;
             }
 
-            toast.success(t('Email verified successfully!') as string);
+            toast.success(t('Email verified successfully!') as string, {
+                className: 'toast-orange',
+                autoClose: 2000,
+            });
             router.push('/login');
         } catch (error) {
             console.error(error);

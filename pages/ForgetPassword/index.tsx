@@ -28,8 +28,14 @@ const ForgetPassword: NextPage = () => {
         if (data) {
             setLoading(false);
             if (data?.item[0]?.OTP) {
-                toast.success('Please Review Your Mail');
-                router.push('/ForgetPassword/Otp');
+                toast.success('Please Review Your Mail', {
+                    className: 'toast-orange',
+                    autoClose: 2000,
+                });
+
+                setTimeout(() => {
+                    router.push('/ForgetPassword/Otp');
+                }, 2000);
             } else if (data?.item[0]?.Error) {
                 setLoading(false);
                 toast.error('Your Mail Not Found. Please check and try again.');
@@ -61,10 +67,6 @@ const ForgetPassword: NextPage = () => {
 
         try {
             sessionStorage.setItem('userEmailverify', email);
-
-            setTimeout(() => {
-                sessionStorage.removeItem('userEmailverify');
-            }, 60000 * 2);
 
             setLoading(true);
             await triggerForgetPass({ Email: email });

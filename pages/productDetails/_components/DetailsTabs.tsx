@@ -65,6 +65,7 @@ const DetailsTabs: FunctionComponent<Props> = ({ id, productData }) => {
         data: reviewData,
         error: reviewError,
         isLoading: reviewLoading,
+        refetch,
     } = useGetReviewQuery({ code, programyear });
     const reviews = reviewData?.items || [];
 
@@ -173,11 +174,27 @@ const DetailsTabs: FunctionComponent<Props> = ({ id, productData }) => {
 
             {/* Reviews */}
             <TabPanel value={value} index={3}>
-                <ReviewSection reviews={reviews} />
-                {code && programyear ? (
-                    <ReviewForm code={code} programyear={programyear} />
+                {reviewLoading ? (
+                    <Typography variant="body2">
+                        <Loading />
+                    </Typography>
+                ) : reviewError ? (
+                    <Typography variant="body2" color="error">
+                        Failed to load reviews. Please try again.
+                    </Typography>
                 ) : (
-                    <Typography variant="body2">Unable to load review form</Typography>
+                    <>
+                        <ReviewSection reviews={reviews} />
+                        {code && programyear ? (
+                            <ReviewForm
+                                code={code}
+                                programyear={programyear}
+                                onReviewAdded={() => refetch()}
+                            />
+                        ) : (
+                            <Typography variant="body2">Unable to load review form</Typography>
+                        )}
+                    </>
                 )}
             </TabPanel>
         </Box>

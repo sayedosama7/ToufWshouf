@@ -36,20 +36,19 @@ const PasswordOtp: NextPage = () => {
         try {
             sessionStorage.setItem('Otp-Verify', otp);
 
-            setTimeout(() => {
-                sessionStorage.removeItem('Otp-Verify');
-            }, 60000 * 2);
-
             const response = await verifyPassword({ V_OTP: parseInt(otp), Email: email }).unwrap();
 
             sessionStorage.setItem('Otp-TransNo', response.TransactionNo);
 
-            setTimeout(() => {
-                sessionStorage.removeItem('Otp-TransNo');
-            }, 60000 * 2);
+            toast.success(t('OTP verified successfully!') as string, {
+                className: 'toast-orange',
+                autoClose: 2000,
+            });
 
-            toast.success(t('OTP verified successfully!') as string);
-            router.push('./RestPassword');
+            setTimeout(() => {
+                router.push('./RestPassword');
+            }, 2000);
+            
         } catch (error: any) {
             const errorMessage = error?.data?.OTP || t('Failed to verify OTP. Please try again.');
             toast.error(errorMessage as string);
