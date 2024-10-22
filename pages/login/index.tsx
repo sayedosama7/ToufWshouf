@@ -3,7 +3,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import AuthLayout from '@/components/AuthLayout';
 import { NextPage } from 'next';
 import UseLogin from './_components/UseLogin';
-import { handleLogin } from './_components/LoginHandler';
+import handleLogin from './_components/LoginHandler';
 import { useLazyLoginUserQuery } from '@/store/Register/LoginApi';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';

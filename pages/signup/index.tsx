@@ -4,7 +4,7 @@ import AuthLayout from '@/components/AuthLayout';
 import { ToastContainer } from 'react-toastify';
 import RegistrationForm from './_components/RegistrationForm';
 import { Register } from '@/type/type';
-import { RegisterHandle } from './_components/RegisterHandle';
+import RegisterHandle from './_components/RegisterHandle';
 import Loading from '@/components/Loading/Loading';
 import Head from 'next/head';
 import { useTranslation } from 'react-i18next';

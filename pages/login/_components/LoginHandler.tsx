@@ -2,7 +2,7 @@ import { setUser } from '@/store/Register/userSlice';
 import { Login } from '@/type/type';
 import { toast } from 'react-toastify';
 
-export const handleLogin = async (
+const handleLogin = async (
     values: Login,
     setValues: React.Dispatch<React.SetStateAction<Login>>,
     setSubmitError: React.Dispatch<React.SetStateAction<string | null>>,
@@ -86,3 +86,5 @@ export const handleLogin = async (
         setIsLoading(false);
     }
 };
+
+export default handleLogin;

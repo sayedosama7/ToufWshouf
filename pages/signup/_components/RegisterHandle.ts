@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useAddUserMutation } from '@/store/Register/RegisterApi';
 import { Register } from '@/type/type';
 
-export const RegisterHandle = (
+const RegisterHandle = (
     values: Register,
     setValues: React.Dispatch<React.SetStateAction<Register>>,
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
@@ -113,3 +113,5 @@ export const RegisterHandle = (
 
     return { handleAdd };
 };
+
+export default RegisterHandle;
